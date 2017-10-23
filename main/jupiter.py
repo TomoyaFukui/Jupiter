@@ -141,10 +141,10 @@ if __name__ == '__main__':
     #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Domain2/Domain2.xml',
     #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml', 'domain/Domain2/Domain2_util3.xml')
     jupiter.set_agent('LinearAgent')
-    #jupiter.set_agent('LinearAgent')
+    jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ConcederAgent')
     #jupiter.set_agent('BoulwareAgent')
-    jupiter.set_java_agent()
+    #jupiter.set_java_agent()
 
     #jupiter.test()
     jupiter.do_negotiation(is_printing=True, print_times=1)
