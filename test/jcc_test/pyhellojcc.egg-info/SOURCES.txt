@@ -1,0 +1,5 @@
+pyhellojcc.egg-info/PKG-INFO
+pyhellojcc.egg-info/SOURCES.txt
+pyhellojcc.egg-info/dependency_links.txt
+pyhellojcc.egg-info/not-zip-safe
+pyhellojcc.egg-info/top_level.txt

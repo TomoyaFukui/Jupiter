@@ -1,0 +1,2 @@
+eclipseでrunnable jar fileを作る際の注意
+実行させたいmain文について、パッケージ名とクラス名を同じにすること。
