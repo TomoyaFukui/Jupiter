@@ -1,5 +1,6 @@
 *.swp
 *.DS_Store
+*.pyc
 main/__pycache__/
 main/agents/__pyche__/
 main/agents/__pyche__
