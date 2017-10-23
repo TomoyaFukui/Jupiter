@@ -2,4 +2,5 @@
 *.DS_Store
 main/__pycache__/
 main/agents/__pyche__/
-
+main/movies/
+main/pictures/
