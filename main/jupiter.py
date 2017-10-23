@@ -133,22 +133,27 @@ class Jupiter:
     def display(self):
         self.__display.show()
 
+    def set_save_pictures_Flag(self):
+        self.__display.set_save_flag()
+
+
 if __name__ == '__main__':
     #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Jobs/Jobs.xml',
     #    'domain/Jobs/Jobs_util1.xml', 'domain/Jobs/Jobs_util2.xml')
-    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Domain2/Domain2.xml',
-        'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml')
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Domain2/Domain2.xml',
-    #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml', 'domain/Domain2/Domain2_util3.xml')
+    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
+    #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml')
+    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
+        'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml', 'domain/Domain2/Domain2_util3.xml')
     jupiter.set_agent('LinearAgent')
-    jupiter.set_agent('LinearAgent')
-    #jupiter.set_agent('ConcederAgent')
-    #jupiter.set_agent('BoulwareAgent')
+    #jupiter.set_agent('LinearAgent')
+    jupiter.set_agent('ConcederAgent')
+    jupiter.set_agent('BoulwareAgent')
     #jupiter.set_java_agent()
 
     #jupiter.test()
+    #jupiter.set_save_pictures_Flag()
     jupiter.do_negotiation(is_printing=True, print_times=1)
-    jupiter.display()
+    #jupiter.display()
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()
 
