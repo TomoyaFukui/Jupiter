@@ -19,7 +19,10 @@ class AbstractAgent(metaclass=ABCMeta):
     @abstractmethod
     def get_name(self) -> str:
         pass
-    #@abstractmethod
+
+    def receive_start_negotiation(self):
+        pass
+
     def receive_end_negotiation(self):
         pass
 
