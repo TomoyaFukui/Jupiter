@@ -136,6 +136,9 @@ class Jupiter:
     def set_save_pictures_Flag(self):
         self.__display.set_save_flag()
 
+    def set_notebook_flag(self):
+        self.__display.set_jupyter_notebook_flag()
+
 
 if __name__ == '__main__':
     #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Jobs/Jobs.xml',
@@ -152,7 +155,8 @@ if __name__ == '__main__':
 
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
-    jupiter.do_negotiation(is_printing=True, print_times=1)
+    jupiter.set_notebook_flag()
+    jupiter.do_negotiation(is_printing=True, print_times=10)
     #jupiter.display()
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()

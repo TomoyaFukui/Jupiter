@@ -16,7 +16,8 @@ class Display:
         self.__calculate = calculator.Calculator(issue_size_list, weight_np_list, discount_list, reservation_value_list)
         self.__agent_num = len(weight_np_list)
         self.__agent_name_list = []
-        self.__save_flag = False
+        self.__is_saved = False
+        self.__is_notebook = False
 
     def plot_initialize(self):
         if self.__agent_num == 2:
@@ -105,8 +106,8 @@ class Display:
                 if j == 3:
                     continue
                 lines[i+2].set_data(util_list[j%3], util_list[(j+1)%3])
-        plt.pause(.1)
-        if self.__save_flag:
+        plt.pause(.001)
+        if self.__is_saved:
             matplotrecorder.save_frame()
 
     def __display_plot3_update_end(self, action_list, get_agreement: [bool, agentAction.AbstractAction]):
@@ -126,7 +127,7 @@ class Display:
                 lines[5].set_data(agreement[i%3], agreement[(i+1)%3])
         self.__ax_list[3].legend(loc='upper right')
         plt.pause(.001)
-        if self.__save_flag:
+        if self.__is_saved:
             matplotrecorder.save_frame()
             matplotrecorder.save_movie("movies/animation.gif", 0.1)
 
@@ -145,7 +146,7 @@ class Display:
 
         self.__ax.legend(loc='upper right')
         plt.pause(.001)
-        if self.__save_flag:
+        if self.__is_saved:
             matplotrecorder.save_frame()
 
     def __display_plot2_update_end(self, action_list, get_agreement: [bool, agentAction.AbstractAction]):
@@ -160,7 +161,7 @@ class Display:
 
         self.__ax.legend(loc='upper right')
         plt.pause(.001)
-        if self.__save_flag:
+        if self.__is_saved:
             matplotrecorder.save_frame()
             matplotrecorder.save_movie("movies/animation.gif", 0.1)
 
@@ -168,6 +169,8 @@ class Display:
         plt.show()
 
     def update(self, action_list):
+        if self.__is_notebook:
+            self.plot_initialize()
         if self.__agent_num == 2:
             self.__display_plot2_update(action_list)
         elif self.__agent_num == 3:
@@ -186,7 +189,10 @@ class Display:
         return self.__calculate.get_parato_distance(action.get_bid().get_indexes(), action.get_time_offered())
 
     def set_save_flag(self):
-        self.__save_flag = True
+        self.__is_saved = True
+
+    def set_jupyter_notebook_flag(self):
+        self.__is_notebook = True
 
     # def display_agreement_points(self):
     #     fig = plt.figure()
