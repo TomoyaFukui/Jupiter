@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from linearAgent import*
 from boulwareAgent import*
 from concederAgent import*
+from lstmAgent import*
 
 class Jupiter:
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
@@ -61,6 +62,9 @@ class Jupiter:
 
         if is_printing:
             self.__display.plot_initialize()
+
+        for agent in self.__agent_list:
+            agent.receive_start_negotiation()
 
         action_list = []
         self.__accept_num = 1
@@ -120,6 +124,8 @@ class Jupiter:
         return False
 
     def __end_negotiation(self, actions, agreement) -> bool:
+        for agent in self.__agent_list:
+            agent.receive_end_negotiation()
         self.__action_list_list.append(actions)
         self.__get_agreement_list.append(agreement)
         return True
@@ -145,22 +151,22 @@ if __name__ == '__main__':
     #    'domain/Jobs/Jobs_util1.xml', 'domain/Jobs/Jobs_util2.xml')
     #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
     #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml')
-    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
-        'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml', 'domain/Domain2/Domain2_util3.xml')
+    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
+    #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml', 'domain/Domain2/Domain2_util3.xml')
+    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Atlas3/triangularFight.xml',
+    #    'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml', 'domain/Atlas3/triangularFight_util3.xml')
+    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Atlas3/triangularFight.xml',
+        'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
     jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('LinearAgent')
     jupiter.set_agent('ConcederAgent')
-    jupiter.set_agent('BoulwareAgent')
+    #jupiter.set_agent('BoulwareAgent')
     #jupiter.set_java_agent()
 
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
-    jupiter.set_notebook_flag()
+    #jupiter.set_notebook_flag()
     jupiter.do_negotiation(is_printing=True, print_times=10)
-    #jupiter.display()
+    jupiter.display()
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()
-
-    #jupiter.display_points_end()
-    #jupiter.display_points()
-    #jupiter.display_agreement_points()
