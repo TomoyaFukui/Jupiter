@@ -9,12 +9,14 @@ import time
 import calculator
 import agentAction
 import bid
+import matplotrecorder
 
 class Display:
     def __init__(self, issue_size_list, weight_np_list, discount_list, reservation_value_list):
         self.__calculate = calculator.Calculator(issue_size_list, weight_np_list, discount_list, reservation_value_list)
         self.__agent_num = len(weight_np_list)
         self.__agent_name_list = []
+        self.__save_flag = False
 
     def plot_initialize(self):
         if self.__agent_num == 2:
@@ -104,6 +106,8 @@ class Display:
                     continue
                 lines[i+2].set_data(util_list[j%3], util_list[(j+1)%3])
         plt.pause(.1)
+        if self.__save_flag:
+            matplotrecorder.save_frame()
 
     def __display_plot3_update_end(self, action_list, get_agreement: [bool, agentAction.AbstractAction]):
         self.__display_plot3_update(action_list)
@@ -122,6 +126,9 @@ class Display:
                 lines[5].set_data(agreement[i%3], agreement[(i+1)%3])
         self.__ax_list[3].legend(loc='upper right')
         plt.pause(.001)
+        if self.__save_flag:
+            matplotrecorder.save_frame()
+            matplotrecorder.save_movie("movies/animation.gif", 0.1)
 
     def __display_plot2_update(self, action_list):
         for i in range(self.__agent_num):
@@ -138,6 +145,8 @@ class Display:
 
         self.__ax.legend(loc='upper right')
         plt.pause(.001)
+        if self.__save_flag:
+            matplotrecorder.save_frame()
 
     def __display_plot2_update_end(self, action_list, get_agreement: [bool, agentAction.AbstractAction]):
         self.__display_plot2_update(action_list)
@@ -151,6 +160,9 @@ class Display:
 
         self.__ax.legend(loc='upper right')
         plt.pause(.001)
+        if self.__save_flag:
+            matplotrecorder.save_frame()
+            matplotrecorder.save_movie("movies/animation.gif", 0.1)
 
     def show(self):
         plt.show()
@@ -172,6 +184,9 @@ class Display:
 
     def get_parato_distance(self, action):
         return self.__calculate.get_parato_distance(action.get_bid().get_indexes(), action.get_time_offered())
+
+    def set_save_flag(self):
+        self.__save_flag = True
 
     # def display_agreement_points(self):
     #     fig = plt.figure()

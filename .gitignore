@@ -1,5 +1,14 @@
 *.swp
 *.DS_Store
+<<<<<<< HEAD
 *.ipynb
 main/__pycache__/
 main/agents/__pycache__/
+=======
+*.pyc
+main/__pycache__/
+main/agents/__pyche__/
+main/agents/__pyche__
+main/movies/
+main/pictures/
+>>>>>>> 9449a802b4509cdb134eb4a940f035cbea72e984
