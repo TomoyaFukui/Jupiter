@@ -2,6 +2,7 @@
 *.DS_Store
 *.pyc
 *.ipynb
+*.json
 main/__pycache__/
 main/agents/__pycache__/
 main/movies/
