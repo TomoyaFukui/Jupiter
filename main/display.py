@@ -25,8 +25,8 @@ class Display:
         elif self.__agent_num == 3:
             self.__initialize_plot3()
 
-    def __initialize_plot2(self):
-        if not self.__is_notebook:
+    def delete_plot(self):
+        if self.__agent_num == 2:
             del self.__fig
             del self.__ax
             del self.__line0
@@ -34,6 +34,12 @@ class Display:
             del self.__line2
             del self.__line3
             del self.__line4
+        elif self.__agent_num == 3:
+            del self.__fig
+            del self.__ax_list
+            del self.__line_list
+
+    def __initialize_plot2(self):
         self.__fig = plt.figure()
         self.__ax = self.__fig.add_subplot(1,1,1)
         self.__ax.grid(True)
@@ -57,10 +63,6 @@ class Display:
         self.__line4, = self.__ax.plot([2], [2], 'y.', ms=10, label='agreement')
 
     def __initialize_plot3(self):
-        if not self.__is_notebook:
-            del self.__fig
-            del self.__ax_list
-            del self.__line_list
         self.__fig = plt.figure(figsize=(12,8))
         self.__fig.subplots_adjust(left=0.05, bottom=0.1, right=0.95, top=0.90, wspace=0.2, hspace=0.6)
         self.__ax_list = []
@@ -182,6 +184,7 @@ class Display:
 
     def update(self, action_list):
         if self.__is_notebook:
+            self.delete_plot()
             self.plot_initialize()
         if self.__agent_num == 2:
             self.__display_plot2_update(action_list)
