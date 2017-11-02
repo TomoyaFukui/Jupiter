@@ -30,7 +30,7 @@ class LSTM():
         f = [i[:3] for i in f]
         #for f_in in f:
         #    f_in = [{1:True, 0:False}[i] for i in f_in]
-        print(f)
+        print(f[0])
         length_of_sequences = len(f)
         self.maxlen = 25
 
@@ -72,7 +72,8 @@ class LSTM():
                 initial = tf.zeros(shape, dtype=tf.float32)
                 return tf.Variable(initial, name=name)
 
-            cell = tf.contrib.rnn.LSTMCell(n_hidden, forget_bias=1.0)
+            #cell = tf.contrib.rnn.LSTMCell(n_hidden, forget_bias=1.0)
+            cell = tf.nn.rnn_cell.LSTMCell(n_hidden, forget_bias=1.0)
             initial_state = cell.zero_state(n_batch, tf.float32)
 
             state = initial_state
@@ -83,14 +84,13 @@ class LSTM():
                         tf.get_variable_scope().reuse_variables()
                     (cell_output, state) = cell(x[:, t, :], state)
                     outputs.append(cell_output)
-
             output = outputs[-1]
 
             V = weight_variable([n_hidden, n_out], 'w')
             b = bias_variable([n_out], 'b')
             y = tf.matmul(output, V, name='y') + b  # 線形活性
-
             return y
+        
         def loss(y, t):
             mse = tf.reduce_mean(tf.square(y - t))
             return mse
@@ -205,8 +205,8 @@ class LSTM():
     モデル学習
     '''
     def epoch_training(self):
-        epochs = 100
-        batch_size = 10
+        epochs = 10
+        batch_size = 3
 
         init = tf.global_variables_initializer()
         saver = tf.train.Saver()
