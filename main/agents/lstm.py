@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import json
+import pprint
 
 import os
 LOG_DIR = os.path.join(os.path.dirname(__file__), 'log')
@@ -16,6 +17,8 @@ if os.path.exists(MODEL_DIR) is False:
 np.random.seed(0)
 tf.set_random_seed(1234)
 
+# data time id id issue1_1 issue1_2 issue1_3 issue2_1 issue2_2 issue2_3
+
 class LSTM():
     def __init__(self):
         self.stop = EarlyStopping()
@@ -27,12 +30,11 @@ class LSTM():
         file_json = open("bids.json", 'r')
         json_data = json.load(file_json) #JSON形式で読み込む
         f = json_data["data"]
-        f = [i[:3] for i in f]
+        f = [i[1:] for i in f]
         #for f_in in f:
         #    f_in = [{1:True, 0:False}[i] for i in f_in]
-        print(f[0])
         length_of_sequences = len(f)
-        self.maxlen = 25
+        self.maxlen = 30
 
         data = []
         target = []
@@ -40,6 +42,8 @@ class LSTM():
             data.append(f[i: i + self.maxlen])
             target.append(f[i + self.maxlen])
 
+        #X = np.array(data).reshape(len(data), self.maxlen, 1) #len(f[0])
+        #Y = np.array(target).reshape(len(data), 1) #len(f[0])
         X = np.array(data).reshape(len(data), self.maxlen, len(f[0])) #len(f[0])
         Y = np.array(target).reshape(len(data), len(f[0])) #len(f[0])
 
@@ -88,9 +92,10 @@ class LSTM():
 
             V = weight_variable([n_hidden, n_out], 'w')
             b = bias_variable([n_out], 'b')
-            y = tf.matmul(output, V, name='y') + b  # 線形活性
+            #y = tf.minimum(tf.maximum(tf.matmul(output, V, name='y') + b, 0), 1)  # 線形活性
+            y = tf.matmul(output, V, name='y') + b # 線形活性
             return y
-        
+
         def loss(y, t):
             mse = tf.reduce_mean(tf.square(y - t))
             return mse
@@ -110,8 +115,6 @@ class LSTM():
 
         self.x = tf.placeholder(tf.float32, shape=[None, self.maxlen, n_in], name='x')
         self.t = tf.placeholder(tf.float32, shape=[None, n_out], name='t')
-        #self.x = tf.placeholder(tf.bool, shape=[None, self.maxlen, n_in], name='x')
-        #self.t = tf.placeholder(tf.bool, shape=[None, n_out], name='t')
         self.n_batch = tf.placeholder(tf.int32, shape=[])
 
         self.y = inference(self.x, self.n_batch, maxlen=self.maxlen, n_hidden=n_hidden, n_out=n_out)
@@ -141,7 +144,7 @@ class LSTM():
         file_json = open("bids.json", 'r')
         json_data = json.load(file_json) #JSON形式で読み込む
         f = json_data["data"]
-        f = [i[:3] for i in f]
+        f = [i[1:] for i in f]
         length_of_sequences = len(f)
 
         data = []
@@ -184,13 +187,12 @@ class LSTM():
         predicted.pop()
         for i, data, predict in zip(range(len(f)), f, predicted):
             if predict is not None:
-                print(i, ":", data, predict)
+                #print(i, ":", data, predict)
+                print(i, ":")
+                for d, p in zip(data, predict):
+                    print("\t", d, ",", p)
             else:
                 print(i, ":", data)
-        #print("f size:", len(f))
-        #print("predicted size:",len(predicted))
-        #print(predicted[201])
-        #print(len(predicted), ":", len(original))
         #for y, t in zip()
         #   print()
         #plt.rc('font', family='serif')
@@ -205,8 +207,8 @@ class LSTM():
     モデル学習
     '''
     def epoch_training(self):
-        epochs = 10
-        batch_size = 3
+        epochs = 500
+        batch_size = 20
 
         init = tf.global_variables_initializer()
         saver = tf.train.Saver()
