@@ -80,7 +80,7 @@ class Calculator:
             elif value_max == value_temp:
                 self.nash_points.append(parato_point)
                 self.nash_points_utility_value.append(utility_list)
-        print(self.nash_points_utility_value)
+        #print(self.nash_points_utility_value)
         #for point, value in zip(self.parato_points, self.parato_points_utility_value):
         #    if min_gap > max(value) - min(value):
         #        min_gap = max(value) - min(value)
