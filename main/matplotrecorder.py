@@ -52,8 +52,8 @@ def save_movie(fname, d_pause, monitor=True):
                 " pictures/recoder*.png " + fname
 
         subprocess.call(cmd, shell=True)
-        cmd = "rm pictures/recoder*.png"
-        subprocess.call(cmd, shell=True)
+        #cmd = "rm pictures/recoder*.png"
+        #subprocess.call(cmd, shell=True)
 
 
 if __name__ == '__main__':
