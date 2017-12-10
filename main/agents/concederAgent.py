@@ -46,6 +46,11 @@ class ConcederAgent(abstractAgent.AbstractAgent):
             for i, size in enumerate(self.__issue_size_list):
                 bid_offer.set_issue_by_index(i, self.__random.randint(0, size-1))
         return agentAction.Offer(self.__agent_id, bid_offer)
+        
+    def receive_start_negotiation(self):
+        self.__is_first_turn = True
+        self.__opponent_action = None
+        self.__opponent_bid = None
 
     def get_name(self):
         return 'ConsederAgent'

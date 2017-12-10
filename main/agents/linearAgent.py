@@ -47,5 +47,10 @@ class LinearAgent(abstractAgent.AbstractAgent):
                 bid_offer.set_issue_by_index(i, self.__random.randint(0, size-1))
         return agentAction.Offer(self.__agent_id, bid_offer)
 
+    def receive_start_negotiation(self):
+        self.__is_first_turn = True
+        self.__opponent_action = None
+        self.__opponent_bid = None
+
     def get_name(self):
         return 'LinearAgent'
