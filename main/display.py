@@ -209,6 +209,9 @@ class Display:
     def set_jupyter_notebook_flag(self):
         self.__is_notebook = True
 
+    def display_from_log(self, file_name):
+        pass
+
     # def display_agreement_points(self):
     #     fig = plt.figure()
     #     ax = fig.add_subplot(1,1,1)

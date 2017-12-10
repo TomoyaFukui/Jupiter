@@ -4,9 +4,8 @@ from typing import List
 
 class Bid:
     def __init__(self, issue_size):
-        self.__length = issue_size
         if isinstance(issue_size, int):
-            self.__indexes = [0] * self.__length
+            self.__indexes = [0] * issue_size
         elif isinstance(issue_size, list):
             self.__indexes = issue_size
         else:

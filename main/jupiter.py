@@ -1,19 +1,22 @@
 # coding: utf-8
+import sys
+import json
+import copy
+import time
+import datetime
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from typing import List
 import summrizationOfUtilitySpace
 import negotiationRule
 import display
-import copy
-import time
 import agentAction
 import comunicateJavaAgent
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from linearAgent import*
 from boulwareAgent import*
 from concederAgent import*
-from lstmAgent import*
+#from lstmAgent import*
+from improvementAgent import *
 
 class Jupiter:
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
@@ -28,7 +31,7 @@ class Jupiter:
         self.__file_names = file_names
         self.__agent_list = []
 
-        self.__display = display.Display(self.__utilities.get_utility_space(0).get_issue_size_list(),
+        self.display = display.Display(self.__utilities.get_utility_space(0).get_issue_size_list(),
                                             self.__utilities.get_weight_np_list(),
                                             self.__utilities.get_discount_factor_list(),
                                             self.__utilities.get_reservation_value_list())
@@ -41,7 +44,7 @@ class Jupiter:
                             self.__utilities.get_utility_space(len(self.__agent_list)),
                             self.__rule,
                             len(self.__agent_list), len(self.__file_names)))
-        self.__display.set_agent_name(self.__agent_list[-1].get_name())
+        self.display.set_agent_name(self.__agent_list[-1].get_name())
 
     def set_java_agent(self):
         self.__agent_list.append(comunicateJavaAgent.JavaAgent(
@@ -49,7 +52,7 @@ class Jupiter:
                                 self.__utilities.get_utility_space(len(self.__agent_list)),
                                 self.__rule,
                                 len(self.__agent_list), len(self.__file_names)))
-        self.__display.set_agent_name(self.__agent_list[-1].get_name())
+        self.display.set_agent_name(self.__agent_list[-1].get_name())
 
     def do_negotiation(self, is_printing: bool, print_times=10) -> bool:
         if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
@@ -61,8 +64,10 @@ class Jupiter:
             return False
 
         if is_printing:
-            self.__display.plot_initialize()
+            self.display.plot_initialize()
 
+        print("-" * 30)
+        print("start negotiation:", len(self.__get_agreement_list)+1)
         for agent in self.__agent_list:
             agent.receive_start_negotiation()
 
@@ -77,6 +82,8 @@ class Jupiter:
                     return self.__end_negotiation(action_list, [False])
                 elif not self.__is_valid_action(action, len(action_list)):
                     print('unexpected invalid action caused')
+                    for agent in self.__agent_list:
+                        agent.receive_end_negotiation()
                     return False
                 elif isinstance(action, agentAction.Accept):
                     action.set_bid(action_list[-1].get_bid())
@@ -93,14 +100,18 @@ class Jupiter:
                 #ネゴシエーションの終了判定
                 if self.__is_finished_negotiation(action):
                     if is_printing:
-                        self.__display.update_end(action_list, [True, action])
-                        print("parato distance:",self.__display.get_parato_distance(action))
+                        self.display.update_end(action_list, [True, action])
+                    print("agreement bid:", action.get_bid().get_indexes())
+                    print("parato distance:",self.display.get_parato_distance(action))
+                    for j, agent in enumerate(self.__agent_list):
+                        print(agent.get_name(), ":", self.__utilities.get_utility_space(j)
+                            .get_utility_discounted(action.get_bid(), action.get_time_offered()))
                     return self.__end_negotiation(action_list, [True, action])
                 elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time and \
                     not self.__rule._NegotiationRuleTime__proceed_negotiation():
                     return self.__end_negotiation(action_list, [False])
             if is_printing and len(action_list) % print_times == 0:
-                self.__display.update(action_list)
+                self.display.update(action_list)
             if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
                 can_proceed = self.__rule._NegotiationRuleTurn__proceed_negotiation()
         return self.__end_negotiation(action_list, [False])
@@ -132,18 +143,114 @@ class Jupiter:
 
     def display_points_end(self):
         if len(self.__agent_list) == 3:
-            self.__display.display_plot3_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])
+            self.display.display_plot3_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])
         elif len(self.__agent_list) == 2:
-            self.__display.display_plot2_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])
+            self.display.display_plot2_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])
 
-    def display(self):
-        self.__display.show()
+    # def display(self):
+    #     self.display.show()
 
     def set_save_pictures_Flag(self):
-        self.__display.set_save_flag()
+        self.display.set_save_flag()
 
     def set_notebook_flag(self):
-        self.__display.set_jupyter_notebook_flag()
+        self.display.set_jupyter_notebook_flag()
+
+    def save_history_as_json(self):
+        def action_to_dict(action: agentAction.AbstractAction):
+            action_dict = {}
+            if isinstance(action, agentAction.Accept):
+                action_dict["type"] = "accept"
+                action_dict["bid"] = action.get_bid().get_indexes()
+            elif isinstance(action, agentAction.Offer):
+                action_dict["type"] = "offer"
+                action_dict["bid"] = action.get_bid().get_indexes()
+            elif isinstance(action, agentAction.EndNegotiation):
+                action_dict["type"] = "end_negotiation"
+            action_dict["id"] = action.get_agent_id()
+            action_dict["time"] = action.get_time_offered()
+            return action_dict
+
+        history_dictionary = {}
+        history_dictionary["agents"] = {}
+        history_dictionary["agents"]["setting"] = self.__setting_file_name
+        history_dictionary["agents"]["size"] = len(self.__agent_list)
+        for agent, (i, file_name) in zip(self.__agent_list, enumerate(self.__file_names)):
+            history_dictionary["agents"][i] = {}
+            history_dictionary["agents"][i]["agent_name"] = agent.get_name()
+            history_dictionary["agents"][i]["file_name"] = file_name
+            history_dictionary["agents"][i]["id"] = i
+
+        history_dictionary["rule"] = {}
+        history_dictionary["rule"]["period"] = self.__rule.get_time_max()
+        history_dictionary["rule"]["repeating"] = len(self.__get_agreement_list)
+        if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
+            history_dictionary["rule"]["type"] = "turn"
+        elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time:
+            history_dictionary["rule"]["type"] = "time"
+
+        for agreement, (i, action_list) in zip(self.__get_agreement_list ,enumerate(self.__action_list_list, start=1)):
+            history_dictionary[i] = {}
+            history_dictionary[i]["result"] = {}
+            if len(agreement) == 2:
+                history_dictionary[i]["result"]["action"] = action_to_dict(agreement[1])
+            history_dictionary[i]["result"]["is_successful"] = agreement[0]
+            history_dictionary[i]["result"]["period"] = len(action_list)
+
+            for j, action in enumerate(action_list, start=1):
+                history_dictionary[i][j] = action_to_dict(action)
+
+        #print(history_dictionary)
+        time_now = datetime.datetime.now().strftime('%Y%m%d-%H:%M:%S')
+        f = open('log/bids' + time_now + ".json", 'w')
+        json.dump(history_dictionary, f, indent=4)
+        return True
+
+def display_log(file_name):
+    def set_jupiter(history_dictionary):
+        if history_dictionary['rule']['type'] == 'turn':
+            negotiation_type = negotiationRule.TypeOfNegotiation.Turn
+        elif history_dictionary['rule']['type'] == 'time':
+            negotiation_type = negotiationRule.TypeOfNegotiation.Time
+        negotiation_time = history_dictionary['rule']['period']
+        setting_file_name = history_dictionary["agents"]['setting']
+        file1 = history_dictionary["agents"]["0"]["file_name"]
+        file2 = history_dictionary["agents"]["1"]["file_name"]
+        jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file1, file2)
+        jupiter.set_agent(history_dictionary["agents"]["0"]["agent_name"])
+        jupiter.set_agent(history_dictionary["agents"]["1"]["agent_name"])
+        return jupiter
+
+    def dict_to_action(action_dict:dict):
+        if action_dict["type"] == "accept":
+            action = agentAction.Accept(action_dict["id"])
+            action.set_bid(bid.Bid(action_dict["bid"]))
+            action.set_time_offered(action_dict["time"])
+        elif action_dict["type"] == "offer":
+            action = agentAction.Offer(action_dict["id"], bid.Bid(action_dict["bid"]))
+            action.set_time_offered(action_dict["time"])
+        elif action_dict["type"] == "end_negotiation":
+            action = agentAction.EndNegotiation(action_dict["id"])
+        return action
+
+    f = open(file_name , 'r')
+    history_dictionary = json.load(f)
+    jupiter = set_jupiter(history_dictionary)
+
+    jupiter.display.plot_initialize()
+    last_history = history_dictionary[str(history_dictionary["rule"]["repeating"])]
+    action_list = []
+    for i in range(1, last_history["result"]["period"]+1):
+        action_list.append(dict_to_action(last_history[str(i)]))
+        jupiter.display.update(action_list)
+
+    if last_history["result"]["is_successful"]:
+        jupiter.display.update_end(action_list, [True, action_list[-1]])
+    else:
+        jupiter.display.update_end(action_list, [False])
+    print("agreement bid:", action_list[-1].get_bid().get_indexes())
+    print("parato distance:", jupiter.display.get_parato_distance(action_list[-1]))
+    jupiter.display.show()
 
 
 if __name__ == '__main__':
@@ -155,11 +262,12 @@ if __name__ == '__main__':
     #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml', 'domain/Domain2/Domain2_util3.xml')
     #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Atlas3/triangularFight.xml',
     #    'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml', 'domain/Atlas3/triangularFight_util3.xml')
-    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Atlas3/triangularFight.xml',
+    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Atlas3/triangularFight.xml',
         'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
     jupiter.set_agent('LinearAgent')
-    #jupiter.set_agent('LinearAgent')
-    jupiter.set_agent('ConcederAgent')
+    #jupiter.set_agent('ImprovementAgent')
+    jupiter.set_agent('LinearAgent')
+    #jupiter.set_agent('ConcederAgent')
     #jupiter.set_agent('BoulwareAgent')
     #jupiter.set_java_agent()
 
@@ -167,6 +275,6 @@ if __name__ == '__main__':
     #jupiter.set_save_pictures_Flag()
     #jupiter.set_notebook_flag()
     jupiter.do_negotiation(is_printing=True, print_times=10)
-    jupiter.display()
+    jupiter.display.show()
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()

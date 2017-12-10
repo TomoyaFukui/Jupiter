@@ -48,4 +48,4 @@ class BoulwareAgent(abstractAgent.AbstractAgent):
         return agentAction.Offer(self.__agent_id, bid_offer)
 
     def get_name(self):
-        return 'BoulawareAgent'
+        return 'BoulwareAgent'
