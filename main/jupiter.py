@@ -294,29 +294,21 @@ if __name__ == '__main__':
         'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
     # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ImprovementAgent')
-<<<<<<< HEAD
     # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ConcederAgent')
     jupiter.set_agent('BoulwareAgent')
-=======
     jupiter.set_agent('LinearAgent')
-    jupiter.set_agent('ConcederAgent')
+    # jupiter.set_agent('ConcederAgent')
     # jupiter.set_agent('BoulwareAgent')
->>>>>>> develop
     #jupiter.set_java_agent()
 
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
     #jupiter.set_notebook_flag()
-<<<<<<< HEAD
     jupiter.do_negotiation(is_printing=True, print_times=1)
-    jupiter.display.show()
-=======
-    jupiter.do_negotiation(is_printing=False, print_times=1)
     # jupiter.display.show()
-    jupiter.save_history_as_json()
+    # jupiter.display.show()
+    # jupiter.save_history_as_json()
     # display_log("log/bids20171222-12:10:32.json", 1)
-
->>>>>>> develop
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()
