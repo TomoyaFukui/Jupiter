@@ -15,9 +15,6 @@ import comunicateJavaAgent
 from linearAgent import*
 from boulwareAgent import*
 from concederAgent import*
-from linearAgent0 import*
-#from lstmAgent import*
-# from improvementAgent import *
 
 class Jupiter:
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
@@ -219,6 +216,7 @@ class Jupiter:
 
         #print(history_dictionary)
         time_now = datetime.datetime.now().strftime('%Y%m%d-%H:%M:%S')
+        print("save in " + 'log/bids' + time_now + ".json")
         f = open('log/bids' + time_now + ".json", 'w')
         json.dump(history_dictionary, f, indent=4)
         return True
@@ -236,16 +234,19 @@ def display_log(file_name, number_of_repeating):
             negotiation_type = negotiationRule.TypeOfNegotiation.Time
         negotiation_time = history_dictionary['rule']['period']
         setting_file_name = history_dictionary["agents"]['setting']
-        file1 = history_dictionary["agents"]["0"]["file_name"]
-        file2 = history_dictionary["agents"]["1"]["file_name"]
-        file3 = history_dictionary["agents"]["2"]["file_name"]
-        # jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file1, file2)
-        jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file1, file2, file3)
-        # jupiter.set_agent(history_dictionary["agents"]["0"]["agent_name"])
+        file_list = []
+        for i in range(0, history_dictionary["agents"]["size"]):
+            file_list.append(history_dictionary["agents"][str(i)]["file_name"])
+        # file2 = history_dictionary["agents"]["1"]["file_name"]
+        # file3 = history_dictionary["agents"]["2"]["file_name"]
+        if history_dictionary["agents"]["size"] == 2:
+            jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file_list[0], file_list[1])
+        elif history_dictionary["agents"]["size"] == 3:
+            jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file_list[0], file_list[1], file_list[2])
+        for i in range(0, history_dictionary["agents"]["size"]):
+            jupiter.set_agent(history_dictionary["agents"][str(i)]["agent_name"])
         # jupiter.set_agent(history_dictionary["agents"]["1"]["agent_name"])
-        jupiter.set_name("ParsCat1")
-        jupiter.set_name("ParsCat2")
-        jupiter.set_agent(history_dictionary["agents"]["2"]["agent_name"])
+        # jupiter.set_agent(history_dictionary["agents"]["2"]["agent_name"])
         return jupiter
 
     def dict_to_action(action_dict:dict):
@@ -278,36 +279,28 @@ def display_log(file_name, number_of_repeating):
         jupiter.display.update_end(action_list, [False])
     print("agreement bid:", action_list[-1].get_bid().get_indexes())
     print("parato distance:", jupiter.display.get_parato_distance(action_list[-1]))
-    # for j, agent in enumerate(jupiter.get_agent_num()):
-        # print(agent.get_name(), ":", jupiter.get_utility(j, action.get_bid(), action.get_time_offered()))
-    print("ParsCat1:", jupiter.get_utility(0, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
-    print("ParsCat2:", jupiter.get_utility(1, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
-    print("improvementAgent:", jupiter.get_utility(2, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
+    for j, agent in enumerate(jupiter.get_agent_num()):
+        print(agent.get_name(), ":", jupiter.get_utility(j, action.get_bid(), action.get_time_offered()))
     jupiter.display.show()
 
 
 if __name__ == '__main__':
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Jobs/Jobs.xml',
-    #    'domain/Jobs/Jobs_util1.xml', 'domain/Jobs/Jobs_util2.xml')
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
-    #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml')
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
-    #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml', 'domain/Domain2/Domain2_util3.xml')
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Atlas3/triangularFight.xml',
-    #    'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml', 'domain/Atlas3/triangularFight_util3.xml')
-    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Atlas3/triangularFight.xml',
-        'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
-    jupiter.set_agent('LinearAgent')
+    # jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
+    #     'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
+    # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ImprovementAgent')
-    jupiter.set_agent('LinearAgent')
+    # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ConcederAgent')
-    #jupiter.set_agent('BoulwareAgent')
+    # jupiter.set_agent('BoulwareAgent')
     #jupiter.set_java_agent()
 
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
     #jupiter.set_notebook_flag()
-    jupiter.do_negotiation(is_printing=True, print_times=10)
-    jupiter.display.show()
+    # jupiter.do_negotiation(is_printing=False, print_times=1)
+    # jupiter.display.show()
+    # jupiter.save_history_as_json()
+    # display_log("log/bids20171222-12:10:32.json", 1)
+
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()
