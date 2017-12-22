@@ -6,6 +6,7 @@ import time
 import datetime
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
+ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 from typing import List
 import summrizationOfUtilitySpace
 import negotiationRule
@@ -24,6 +25,10 @@ class Jupiter:
             self.__rule = negotiationRule.NegotiationRuleTime(negotiation_time)
         else:
             raise ValueError('negotiation type error in Jupiter init')
+        file_names = list(file_names)
+        print(file_names)
+        for i in range(0, len(file_names)):
+            file_names[i] = ABSPATH + file_names[i]
         self.__utilities = summrizationOfUtilitySpace.SummrizationOfUtilitySpace(file_names)
         self.__setting_file_name = setting_file_name
         self.__file_names = file_names
@@ -216,8 +221,8 @@ class Jupiter:
 
         #print(history_dictionary)
         time_now = datetime.datetime.now().strftime('%Y%m%d-%H:%M:%S')
-        print("save in " + 'log/bids' + time_now + ".json")
-        f = open('log/bids' + time_now + ".json", 'w')
+        print("save in " + ABSPATH + 'log/bids' + time_now + ".json")
+        f = open(ABSPATH + 'log/bids' + time_now + ".json", 'w')
         json.dump(history_dictionary, f, indent=4)
         return True
 
@@ -285,21 +290,21 @@ def display_log(file_name, number_of_repeating):
 
 
 if __name__ == '__main__':
-    # jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
-    #     'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
+    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
+        'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
     # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ImprovementAgent')
-    # jupiter.set_agent('LinearAgent')
-    #jupiter.set_agent('ConcederAgent')
+    jupiter.set_agent('LinearAgent')
+    jupiter.set_agent('ConcederAgent')
     # jupiter.set_agent('BoulwareAgent')
     #jupiter.set_java_agent()
 
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
     #jupiter.set_notebook_flag()
-    # jupiter.do_negotiation(is_printing=False, print_times=1)
+    jupiter.do_negotiation(is_printing=False, print_times=1)
     # jupiter.display.show()
-    # jupiter.save_history_as_json()
+    jupiter.save_history_as_json()
     # display_log("log/bids20171222-12:10:32.json", 1)
 
     #jupiter.do_negotiation(is_printing=True, print_times=1)
