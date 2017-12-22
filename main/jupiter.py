@@ -6,6 +6,7 @@ import time
 import datetime
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
+ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 from typing import List
 import summrizationOfUtilitySpace
 import negotiationRule
@@ -24,6 +25,10 @@ class Jupiter:
             self.__rule = negotiationRule.NegotiationRuleTime(negotiation_time)
         else:
             raise ValueError('negotiation type error in Jupiter init')
+        file_names = list(file_names)
+        print(file_names)
+        for i in range(0, len(file_names)):
+            file_names[i] = ABSPATH + file_names[i]
         self.__utilities = summrizationOfUtilitySpace.SummrizationOfUtilitySpace(file_names)
         self.__setting_file_name = setting_file_name
         self.__file_names = file_names
@@ -216,7 +221,8 @@ class Jupiter:
 
         #print(history_dictionary)
         time_now = datetime.datetime.now().strftime('%Y%m%d-%H:%M:%S')
-        f = open('log/bids' + time_now + ".json", 'w')
+        print("save in " + ABSPATH + 'log/bids' + time_now + ".json")
+        f = open(ABSPATH + 'log/bids' + time_now + ".json", 'w')
         json.dump(history_dictionary, f, indent=4)
         return True
 
@@ -233,16 +239,19 @@ def display_log(file_name, number_of_repeating):
             negotiation_type = negotiationRule.TypeOfNegotiation.Time
         negotiation_time = history_dictionary['rule']['period']
         setting_file_name = history_dictionary["agents"]['setting']
-        file1 = history_dictionary["agents"]["0"]["file_name"]
-        file2 = history_dictionary["agents"]["1"]["file_name"]
-        file3 = history_dictionary["agents"]["2"]["file_name"]
-        # jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file1, file2)
-        jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file1, file2, file3)
-        # jupiter.set_agent(history_dictionary["agents"]["0"]["agent_name"])
+        file_list = []
+        for i in range(0, history_dictionary["agents"]["size"]):
+            file_list.append(history_dictionary["agents"][str(i)]["file_name"])
+        # file2 = history_dictionary["agents"]["1"]["file_name"]
+        # file3 = history_dictionary["agents"]["2"]["file_name"]
+        if history_dictionary["agents"]["size"] == 2:
+            jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file_list[0], file_list[1])
+        elif history_dictionary["agents"]["size"] == 3:
+            jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file_list[0], file_list[1], file_list[2])
+        for i in range(0, history_dictionary["agents"]["size"]):
+            jupiter.set_agent(history_dictionary["agents"][str(i)]["agent_name"])
         # jupiter.set_agent(history_dictionary["agents"]["1"]["agent_name"])
-        jupiter.set_name("ParsCat1")
-        jupiter.set_name("ParsCat2")
-        jupiter.set_agent(history_dictionary["agents"]["2"]["agent_name"])
+        # jupiter.set_agent(history_dictionary["agents"]["2"]["agent_name"])
         return jupiter
 
     def dict_to_action(action_dict:dict):
@@ -275,28 +284,39 @@ def display_log(file_name, number_of_repeating):
         jupiter.display.update_end(action_list, [False])
     print("agreement bid:", action_list[-1].get_bid().get_indexes())
     print("parato distance:", jupiter.display.get_parato_distance(action_list[-1]))
-    # for j, agent in enumerate(jupiter.get_agent_num()):
-        # print(agent.get_name(), ":", jupiter.get_utility(j, action.get_bid(), action.get_time_offered()))
-    print("ParsCat1:", jupiter.get_utility(0, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
-    print("ParsCat2:", jupiter.get_utility(1, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
-    print("improvementAgent:", jupiter.get_utility(2, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
+    for j, agent in enumerate(jupiter.get_agent_num()):
+        print(agent.get_name(), ":", jupiter.get_utility(j, action.get_bid(), action.get_time_offered()))
     jupiter.display.show()
 
 
 if __name__ == '__main__':
     jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
         'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
-    jupiter.set_agent('LinearAgent')
+    # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ImprovementAgent')
+<<<<<<< HEAD
     # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ConcederAgent')
     jupiter.set_agent('BoulwareAgent')
+=======
+    jupiter.set_agent('LinearAgent')
+    jupiter.set_agent('ConcederAgent')
+    # jupiter.set_agent('BoulwareAgent')
+>>>>>>> develop
     #jupiter.set_java_agent()
 
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
     #jupiter.set_notebook_flag()
+<<<<<<< HEAD
     jupiter.do_negotiation(is_printing=True, print_times=1)
     jupiter.display.show()
+=======
+    jupiter.do_negotiation(is_printing=False, print_times=1)
+    # jupiter.display.show()
+    jupiter.save_history_as_json()
+    # display_log("log/bids20171222-12:10:32.json", 1)
+
+>>>>>>> develop
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()
