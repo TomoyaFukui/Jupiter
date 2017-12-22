@@ -15,8 +15,9 @@ import comunicateJavaAgent
 from linearAgent import*
 from boulwareAgent import*
 from concederAgent import*
+from linearAgent0 import*
 #from lstmAgent import*
-from improvementAgent import *
+# from improvementAgent import *
 
 class Jupiter:
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
@@ -46,12 +47,19 @@ class Jupiter:
                             len(self.__agent_list), len(self.__file_names)))
         self.display.set_agent_name(self.__agent_list[-1].get_name())
 
-    def set_java_agent(self):
+    def set_name(self, agent_name):
+        self.__agent_list.append(LinearAgent(
+                            self.__utilities.get_utility_space(len(self.__agent_list)),
+                            self.__rule,
+                            len(self.__agent_list), len(self.__file_names)))
+        self.display.set_agent_name(agent_name)
+
+    def set_java_agent(self, port:int):
         self.__agent_list.append(comunicateJavaAgent.JavaAgent(
                                 self.__setting_file_name,
                                 self.__utilities.get_utility_space(len(self.__agent_list)),
                                 self.__rule,
-                                len(self.__agent_list), len(self.__file_names)))
+                                len(self.__agent_list), len(self.__file_names), port))
         self.display.set_agent_name(self.__agent_list[-1].get_name())
 
     def do_negotiation(self, is_printing: bool, print_times=10) -> bool:
@@ -77,7 +85,7 @@ class Jupiter:
         while can_proceed:
             for i in range(len(self.__agent_list)):
                 #agentにアクションを起こさせて、時間内かつアクションが有効か検証する
-                action = self.__agent_list[i].sendAction()
+                action = self.__agent_list[i].send_action()
                 if self.__rule.get_time_now() > 1.0:
                     return self.__end_negotiation(action_list, [False])
                 elif not self.__is_valid_action(action, len(action_list)):
@@ -89,23 +97,31 @@ class Jupiter:
                     action.set_bid(action_list[-1].get_bid())
                 action.set_time_offered(self.__rule.get_time_now())
                 action_list.append(action)
-                if is_printing:
-                    print(self.__rule.get_time_now() , self.__agent_list[action.get_agent_id()].get_name(),
-                        action_list[-1].__class__.__name__, action_list[-1].get_bid().get_indexes())
+                # if is_printing:
+                # if not isinstance(action, agentAction.EndNegotiation):
+                #     print(self.__rule.get_time_now() , self.__agent_list[action.get_agent_id()].get_name(),
+                #         action_list[-1].__class__.__name__, action_list[-1].get_bid().get_indexes())
                 #各agentにアクションを知らせる
                 for j in range(len(self.__agent_list)):
                     if i == j:
                         continue
-                    self.__agent_list[j].receiveAction(action_list[-1])
+                    self.__agent_list[j].receive_action(action_list[-1])
                 #ネゴシエーションの終了判定
                 if self.__is_finished_negotiation(action):
                     if is_printing:
                         self.display.update_end(action_list, [True, action])
-                    print("agreement bid:", action.get_bid().get_indexes())
-                    print("parato distance:",self.display.get_parato_distance(action))
-                    for j, agent in enumerate(self.__agent_list):
-                        print(agent.get_name(), ":", self.__utilities.get_utility_space(j)
-                            .get_utility_discounted(action.get_bid(), action.get_time_offered()))
+                    # EndNegotiationもprato_distanceをだせるように
+                    if not isinstance(action, agentAction.EndNegotiation):
+                        print("last turn:", self.__rule.get_time_now())
+                        print("agreement bid:", action.get_bid().get_indexes())
+                        print("parato distance:",self.display.get_parato_distance(action))
+                        for j, agent in enumerate(self.__agent_list):
+                            print(agent.get_name(), ":", self.__utilities.get_utility_space(j)
+                                .get_utility_discounted(action.get_bid(), action.get_time_offered()))
+                    else:
+                        print("last turn:", self.__rule.get_time_now())
+                        print("agreement bid: EndNegotiation")
+                    # EndNegotiationもprato_distanceをだせるように
                     return self.__end_negotiation(action_list, [True, action])
                 elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time and \
                     not self.__rule._NegotiationRuleTime__proceed_negotiation():
@@ -114,6 +130,7 @@ class Jupiter:
                 self.display.update(action_list)
             if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
                 can_proceed = self.__rule._NegotiationRuleTurn__proceed_negotiation()
+        print("fail to get agreement")
         return self.__end_negotiation(action_list, [False])
 
     def __is_valid_action(self, action: agentAction.AbstractAction, action_len: int) -> bool:
@@ -206,7 +223,12 @@ class Jupiter:
         json.dump(history_dictionary, f, indent=4)
         return True
 
-def display_log(file_name):
+    def get_agent_num(self):
+        return len(self.__agent_list)
+    def get_utility(self, index, bid_, time_):
+        return self.__utilities.get_utility_space(index).get_utility_discounted(bid_, time_)
+
+def display_log(file_name, number_of_repeating):
     def set_jupiter(history_dictionary):
         if history_dictionary['rule']['type'] == 'turn':
             negotiation_type = negotiationRule.TypeOfNegotiation.Turn
@@ -216,9 +238,14 @@ def display_log(file_name):
         setting_file_name = history_dictionary["agents"]['setting']
         file1 = history_dictionary["agents"]["0"]["file_name"]
         file2 = history_dictionary["agents"]["1"]["file_name"]
-        jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file1, file2)
-        jupiter.set_agent(history_dictionary["agents"]["0"]["agent_name"])
-        jupiter.set_agent(history_dictionary["agents"]["1"]["agent_name"])
+        file3 = history_dictionary["agents"]["2"]["file_name"]
+        # jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file1, file2)
+        jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file1, file2, file3)
+        # jupiter.set_agent(history_dictionary["agents"]["0"]["agent_name"])
+        # jupiter.set_agent(history_dictionary["agents"]["1"]["agent_name"])
+        jupiter.set_name("ParsCat1")
+        jupiter.set_name("ParsCat2")
+        jupiter.set_agent(history_dictionary["agents"]["2"]["agent_name"])
         return jupiter
 
     def dict_to_action(action_dict:dict):
@@ -238,7 +265,8 @@ def display_log(file_name):
     jupiter = set_jupiter(history_dictionary)
 
     jupiter.display.plot_initialize()
-    last_history = history_dictionary[str(history_dictionary["rule"]["repeating"])]
+    # last_history = history_dictionary[str(history_dictionary["rule"]["repeating"])]
+    last_history = history_dictionary[str(number_of_repeating)]
     action_list = []
     for i in range(1, last_history["result"]["period"]+1):
         action_list.append(dict_to_action(last_history[str(i)]))
@@ -250,6 +278,11 @@ def display_log(file_name):
         jupiter.display.update_end(action_list, [False])
     print("agreement bid:", action_list[-1].get_bid().get_indexes())
     print("parato distance:", jupiter.display.get_parato_distance(action_list[-1]))
+    # for j, agent in enumerate(jupiter.get_agent_num()):
+        # print(agent.get_name(), ":", jupiter.get_utility(j, action.get_bid(), action.get_time_offered()))
+    print("ParsCat1:", jupiter.get_utility(0, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
+    print("ParsCat2:", jupiter.get_utility(1, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
+    print("improvementAgent:", jupiter.get_utility(2, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
     jupiter.display.show()
 
 

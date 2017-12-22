@@ -23,7 +23,6 @@ class NegotiationRule(metaclass=ABCMeta):
     def get_type(self):
         return self.__type
 
-
     @abstractmethod
     def get_time_now(self):
         return float(self.__time_now) / self.__max_time
@@ -50,7 +49,7 @@ class NegotiationRuleTurn(NegotiationRule):
         return self.__max_time
 
     def get_time_now(self):
-        return float(self.__time_now) / self.__max_time
+        return float(self.__time_now - 1) / self.__max_time
 
     def get_type(self):
         return self.__type

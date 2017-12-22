@@ -7,10 +7,9 @@ import abstractUtilitySpace
 import negotiationRule
 import bid
 
-
 class JavaAgent(abstractAgent.AbstractAgent):
     def __init__(self, setting_file_name:str, utility_space: abstractUtilitySpace.AbstractUtilitySpace,
-                    negotiation_rule: negotiationRule.NegotiationRule, agent_id: int, agent_num: int):
+                    negotiation_rule: negotiationRule.NegotiationRule, agent_id: int, agent_num: int, port:int):
         self.__utility_space = utility_space
         self.__rule = negotiation_rule
         self.__agent_id = agent_id
@@ -18,22 +17,15 @@ class JavaAgent(abstractAgent.AbstractAgent):
         self.__opponent_bid = bid.Bid(len(self.__issue_size_list))
 
         # JVMへ接続
-        self.gateway = JavaGateway(gateway_parameters=GatewayParameters(port=25535))
+        self.gateway = JavaGateway(gateway_parameters=GatewayParameters(port=port))
+        self.__setting_file_name = setting_file_name
         # Geniusのagentのinit
         self.__agent = self.gateway.entry_point
-        random_seed = 0
-        if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
-            self.__agent.setAgent(setting_file_name,
-                                self.__utility_space.get_file_name(),
-                                0, self.__rule.get_time_max(),
-                                random_seed, str(agent_id), agent_num)
-        elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time:
-            self.__agent.setAgent(setting_file_name,
-                                self.__utility_space.get_file_name(),
-                                1, self.__rule.get_time_max(),
-                                random_seed, str(agent_id), agent_num)
+        self.__agent_num = agent_num
+        self.__random_seed = 0
+        self.receive_start_negotiation()
 
-    def receiveAction(self, agent_action: agentAction.AbstractAction):
+    def receive_action(self, agent_action: agentAction.AbstractAction):
         bid_str = ""
         if isinstance(agent_action, agentAction.Offer):
             for i, index in enumerate(agent_action.get_bid().get_indexes()):
@@ -41,8 +33,7 @@ class JavaAgent(abstractAgent.AbstractAgent):
             bid_str = bid_str[:-1]
         self.gateway.receiveAction(str(agent_action.get_agent_id()), agent_action.__class__.__name__, bid_str)
 
-
-    def sendAction(self):
+    def send_action(self):
         message = self.gateway.entry_point.sendAction()
         massage_list = message.split(",")
         if massage_list[1].find("Offer") > -1:
@@ -59,6 +50,17 @@ class JavaAgent(abstractAgent.AbstractAgent):
     def get_name(self):
         return self.gateway.entry_point.getName()
 
+    def receive_start_negotiation(self):
+        if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
+            self.__agent.setAgent(self.__setting_file_name,
+                                self.__utility_space.get_file_name(),
+                                0, self.__rule.get_time_max(),
+                                self.__random_seed, str(self.__agent_id), self.__agent_num)
+        elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time:
+            self.__agent.setAgent(self.__setting_file_name,
+                                self.__utility_space.get_file_name(),
+                                1, self.__rule.get_time_max(),
+                                self.__random_seed, str(self.__agent_id), self.__agent_num)
 
 
 #class JavaAgent():

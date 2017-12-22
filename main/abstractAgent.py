@@ -11,10 +11,10 @@ class AbstractAgent(metaclass=ABCMeta):
                 negotiation_rule: negotiationRule.NegotiationRule, agent_id:int, agent_num:int):
         pass
     @abstractmethod
-    def receiveAction(self, agent_action: agentAction.AbstractAction):
+    def receive_action(self, agent_action: agentAction.AbstractAction):
         pass
     @abstractmethod
-    def sendAction(self) -> agentAction.AbstractAction:
+    def send_action(self) -> agentAction.AbstractAction:
         pass
     @abstractmethod
     def get_name(self) -> str:
