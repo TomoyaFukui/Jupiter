@@ -15,9 +15,6 @@ import comunicateJavaAgent
 from linearAgent import*
 from boulwareAgent import*
 from concederAgent import*
-from linearAgent0 import*
-#from lstmAgent import*
-# from improvementAgent import *
 
 class Jupiter:
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
@@ -287,27 +284,19 @@ def display_log(file_name, number_of_repeating):
 
 
 if __name__ == '__main__':
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 1000, 'domain/Jobs/Jobs.xml',
-    #    'domain/Jobs/Jobs_util1.xml', 'domain/Jobs/Jobs_util2.xml')
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
-    #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml')
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Domain2/Domain2.xml',
-    #    'domain/Domain2/Domain2_util1.xml', 'domain/Domain2/Domain2_util2.xml', 'domain/Domain2/Domain2_util3.xml')
-    #jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Atlas3/triangularFight.xml',
-    #    'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml', 'domain/Atlas3/triangularFight_util3.xml')
-    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, 'domain/Atlas3/triangularFight.xml',
+    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
         'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
     jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ImprovementAgent')
-    jupiter.set_agent('LinearAgent')
+    # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ConcederAgent')
-    #jupiter.set_agent('BoulwareAgent')
+    jupiter.set_agent('BoulwareAgent')
     #jupiter.set_java_agent()
 
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
     #jupiter.set_notebook_flag()
-    jupiter.do_negotiation(is_printing=True, print_times=10)
+    jupiter.do_negotiation(is_printing=True, print_times=1)
     jupiter.display.show()
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()
