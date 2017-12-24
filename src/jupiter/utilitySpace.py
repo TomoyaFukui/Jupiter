@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 import numpy as np
 import random
 import copy

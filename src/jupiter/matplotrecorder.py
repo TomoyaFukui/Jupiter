@@ -21,6 +21,10 @@
 
 """
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+LOGPATH = os.path.dirname(os.path.abspath(__file__)) + "/../"
 import matplotlib.pyplot as plt
 import subprocess
 
@@ -35,7 +39,7 @@ def save_frame():
 
     if not donothing:
         global iframe
-        plt.savefig("pictures/recoder" + '{0:04d}'.format(iframe) + '.png')
+        plt.savefig(LOGPATH+"pictures/recoder" + '{0:04d}'.format(iframe) + '.png')
         iframe += 1
 
 
@@ -75,5 +79,5 @@ if __name__ == '__main__':
 
         save_frame()  # save each frame
 
-    save_movie("movies/animation.gif", 0.1)
+    save_movie(LOGPATH+"movies/animation.gif", 0.1)
     #  save_movie("animation.mp4", 0.1)

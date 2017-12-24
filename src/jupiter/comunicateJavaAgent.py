@@ -1,4 +1,7 @@
 #import py4j.java_gateway
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from py4j.java_gateway import JavaGateway, GatewayParameters
 import random
 import abstractAgent

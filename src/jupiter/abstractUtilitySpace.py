@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from abc import ABCMeta, abstractmethod
 import enum
 from bid import Bid

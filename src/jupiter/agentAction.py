@@ -1,4 +1,7 @@
 # coding: utf-8
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from abc import ABCMeta, abstractmethod
 from enum import Enum, unique
 import time
