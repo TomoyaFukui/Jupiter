@@ -1,10 +1,13 @@
 # coding: utf-8
-from enum import Enum, unique
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
+from enum import IntEnum, unique
 from abc import ABCMeta, abstractmethod
 import time
 
 @unique
-class TypeOfNegotiation(Enum):
+class TypeOfNegotiation(IntEnum):
     Turn = 1
     Time = 2
 

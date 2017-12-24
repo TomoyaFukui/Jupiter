@@ -1,12 +1,13 @@
 # coding: utf-8
-import sys
 import json
 import copy
 import time
 import datetime
+import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
-ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/"
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../agents')
+ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/../"
 from typing import List
 import summrizationOfUtilitySpace
 import negotiationRule
@@ -26,7 +27,7 @@ class Jupiter:
         else:
             raise ValueError('negotiation type error in Jupiter init')
         file_names = list(file_names)
-        if file_names[0].find("Users") <= 0:
+        if file_names[0].find("Users") < 0:
             for i in range(0, len(file_names)):
                 file_names[i] = ABSPATH + file_names[i]
         self.__utilities = summrizationOfUtilitySpace.SummrizationOfUtilitySpace(file_names)
@@ -290,6 +291,7 @@ def display_log(file_name, number_of_repeating):
 
 
 if __name__ == '__main__':
+    pass
     # jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
     #     'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
     # jupiter.set_agent('LinearAgent')
