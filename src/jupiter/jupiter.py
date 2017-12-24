@@ -292,18 +292,14 @@ def display_log(file_name, number_of_repeating):
 
 if __name__ == '__main__':
     pass
-    # jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
-    #     'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
+    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
+        'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
+    jupiter.set_agent('LinearAgent')
     # jupiter.set_agent('LinearAgent')
-    #jupiter.set_agent('ImprovementAgent')
-    # jupiter.set_agent('LinearAgent')
-    #jupiter.set_agent('ConcederAgent')
-    # jupiter.set_agent('BoulwareAgent')
-    # jupiter.set_agent('LinearAgent')
-    # jupiter.set_agent('ConcederAgent')
+    jupiter.set_agent('ConcederAgent')
     # jupiter.set_agent('BoulwareAgent')
     # jupiter.set_java_agent(25535)
 
-    #jupiter.test()
-    #jupiter.set_save_pictures_Flag()
-    #jupiter.display()
+    #jupiter.set_notebook_flag()
+    jupiter.do_negotiation(is_printing=True, print_times=1)
+    jupiter.display.show()
