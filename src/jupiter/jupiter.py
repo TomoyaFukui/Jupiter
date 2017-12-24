@@ -297,12 +297,9 @@ if __name__ == '__main__':
     # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ImprovementAgent')
     # jupiter.set_agent('LinearAgent')
-<<<<<<< HEAD:main/jupiter.py
     #jupiter.set_agent('ConcederAgent')
-    jupiter.set_agent('BoulwareAgent')
-    jupiter.set_agent('LinearAgent')
-=======
->>>>>>> develop:src/jupiter/jupiter.py
+    # jupiter.set_agent('BoulwareAgent')
+    # jupiter.set_agent('LinearAgent')
     # jupiter.set_agent('ConcederAgent')
     # jupiter.set_agent('BoulwareAgent')
     # jupiter.set_java_agent(25535)
@@ -310,18 +307,13 @@ if __name__ == '__main__':
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
     #jupiter.set_notebook_flag()
-<<<<<<< HEAD:main/jupiter.py
-    jupiter.do_negotiation(is_printing=True, print_times=1)
     # jupiter.display.show()
     # jupiter.display.show()
     # jupiter.save_history_as_json()
     # display_log("log/bids20171222-12:10:32.json", 1)
-=======
     # jupiter.do_negotiation(is_printing=True, print_times=1)
     # jupiter.display.show()
     # jupiter.save_history_as_json()
     # display_log("log/bids20171222-15:37:21.json", 1)
-
->>>>>>> develop:src/jupiter/jupiter.py
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()
