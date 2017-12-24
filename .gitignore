@@ -3,10 +3,10 @@
 *.pyc
 *.ipynb
 *.json
-main/__pycache__/
-main/agents/__pycache__/
-main/movies/
-main/pictures/
-main/main.py
+src/__pycache__/
+src/agents/__pycache__/
+src/movies/
+src/pictures/
+src/main.py
 memo.md
 

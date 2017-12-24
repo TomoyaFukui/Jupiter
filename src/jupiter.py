@@ -26,9 +26,9 @@ class Jupiter:
         else:
             raise ValueError('negotiation type error in Jupiter init')
         file_names = list(file_names)
-        print(file_names)
-        for i in range(0, len(file_names)):
-            file_names[i] = ABSPATH + file_names[i]
+        if file_names[0].find("Users") <= 0:
+            for i in range(0, len(file_names)):
+                file_names[i] = ABSPATH + file_names[i]
         self.__utilities = summrizationOfUtilitySpace.SummrizationOfUtilitySpace(file_names)
         self.__setting_file_name = setting_file_name
         self.__file_names = file_names
@@ -249,7 +249,7 @@ def display_log(file_name, number_of_repeating):
         elif history_dictionary["agents"]["size"] == 3:
             jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file_list[0], file_list[1], file_list[2])
         for i in range(0, history_dictionary["agents"]["size"]):
-            jupiter.set_agent(history_dictionary["agents"][str(i)]["agent_name"])
+            jupiter.set_name(history_dictionary["agents"][str(i)]["agent_name"])
         # jupiter.set_agent(history_dictionary["agents"]["1"]["agent_name"])
         # jupiter.set_agent(history_dictionary["agents"]["2"]["agent_name"])
         return jupiter
@@ -284,28 +284,28 @@ def display_log(file_name, number_of_repeating):
         jupiter.display.update_end(action_list, [False])
     print("agreement bid:", action_list[-1].get_bid().get_indexes())
     print("parato distance:", jupiter.display.get_parato_distance(action_list[-1]))
-    for j, agent in enumerate(jupiter.get_agent_num()):
-        print(agent.get_name(), ":", jupiter.get_utility(j, action.get_bid(), action.get_time_offered()))
+    for i in range(0, jupiter.get_agent_num()):
+        print(history_dictionary["agents"][str(i)]["agent_name"], ":", jupiter.get_utility(i, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
     jupiter.display.show()
 
 
 if __name__ == '__main__':
-    jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
-        'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
+    # jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
+    #     'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
     # jupiter.set_agent('LinearAgent')
     #jupiter.set_agent('ImprovementAgent')
-    jupiter.set_agent('LinearAgent')
-    jupiter.set_agent('ConcederAgent')
+    # jupiter.set_agent('LinearAgent')
+    # jupiter.set_agent('ConcederAgent')
     # jupiter.set_agent('BoulwareAgent')
-    #jupiter.set_java_agent()
+    # jupiter.set_java_agent(25535)
 
     #jupiter.test()
     #jupiter.set_save_pictures_Flag()
     #jupiter.set_notebook_flag()
-    jupiter.do_negotiation(is_printing=False, print_times=1)
+    # jupiter.do_negotiation(is_printing=True, print_times=1)
     # jupiter.display.show()
-    jupiter.save_history_as_json()
-    # display_log("log/bids20171222-12:10:32.json", 1)
+    # jupiter.save_history_as_json()
+    # display_log("log/bids20171222-15:37:21.json", 1)
 
     #jupiter.do_negotiation(is_printing=True, print_times=1)
     #jupiter.display()
