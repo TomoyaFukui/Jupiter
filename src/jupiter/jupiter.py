@@ -17,7 +17,6 @@ import comunicateJavaAgent
 from linearAgent import*
 from boulwareAgent import*
 from concederAgent import*
-from improvementAgent import *
 
 class Jupiter:
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):

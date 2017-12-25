@@ -19,10 +19,11 @@ class AbstractAgent(metaclass=ABCMeta):
                 negotiation_rule: negotiationRule.NegotiationRule, agent_id:int, agent_num:int):
         """
         初期化処理を行う
-        :param AbstractUtilitySpace utility_space 効用空間の情報が取得できる
-        :param NegotiationRule negotiation_rule 交渉の時間やタイプ，現在の正規化時間が取得できる
-        :param int agent_id 自分のエージェントに割り振られたid
-        :param int agent_num 交渉参加エージェントの数
+
+        :param AbstractUtilitySpace utility_space: 効用空間の情報が取得できる
+        :param NegotiationRule negotiation_rule: 交渉の時間やタイプ，現在の正規化時間が取得できる
+        :param int agent_id: 自分のエージェントに割り振られたid
+        :param int agent_num: 交渉参加エージェントの数
         """
         pass
 
@@ -30,13 +31,15 @@ class AbstractAgent(metaclass=ABCMeta):
     def receive_action(self, agent_action: agentAction.AbstractAction):
         """
         他エージェントが行動を起こした場合に，その行動が通知される
-        :param AbstractAction agent_action
+
+        :param AbstractAction agent_action: 他のエージェントが起こした行動
         """
         pass
     @abstractmethod
     def send_action(self) -> agentAction.AbstractAction:
         """
         自分のターンが回ってきた際に呼び出され，どの行動を起こすか返す
+
         :rtype: AbstractAction
         :return: Accept,Offer,EndNegotiationのいずれかを返す
         """
@@ -45,6 +48,7 @@ class AbstractAgent(metaclass=ABCMeta):
     def get_name(self) -> str:
         """
         自分のエージェントの名前を返す．クラス名と同じにすることを推奨
+
         :rtype: str
         :return: エージェントの名前．クラス名と同じにすることを推奨
         """
