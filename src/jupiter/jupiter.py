@@ -17,6 +17,7 @@ import comunicateJavaAgent
 from linearAgent import*
 from boulwareAgent import*
 from concederAgent import*
+from improvementAgent import *
 
 class Jupiter:
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
@@ -63,6 +64,14 @@ class Jupiter:
                                 self.__utilities.get_utility_space(len(self.__agent_list)),
                                 self.__rule,
                                 len(self.__agent_list), len(self.__file_names), port))
+        self.display.set_agent_name(self.__agent_list[-1].get_name())
+
+    def set_improvement_agent(self):
+        self.__agent_list.append(ImprovementAgent(
+                                self.__setting_file_name,
+                                self.__utilities.get_utility_space(len(self.__agent_list)),
+                                self.__rule,
+                                len(self.__agent_list), len(self.__file_names)))
         self.display.set_agent_name(self.__agent_list[-1].get_name())
 
     def do_negotiation(self, is_printing: bool, print_times=10) -> bool:
