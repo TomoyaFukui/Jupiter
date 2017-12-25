@@ -13,8 +13,6 @@ class AbstractUtilitySpace(metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, file_name):
         """
-        初期化処理を行う
-
         :param str file_name: 交渉ドメインファイルのパス
         """
         pass
@@ -66,7 +64,7 @@ class AbstractUtilitySpace(metaclass=ABCMeta):
     def get_file_name(self) -> str:
         """
         交渉ドメインファイルのパスを返す
-
+        
         :rtype: str
         :return: 交渉ドメインファイルのパス
         """

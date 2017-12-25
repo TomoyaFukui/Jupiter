@@ -9,6 +9,10 @@ import copy
 import bid
 
 class AbstractAction(metaclass=ABCMeta):
+    """
+    自動交渉エージェントが起こすActionの抽象クラス
+    各Actionはこのクラスを継承すること
+    """
     @abstractmethod
     def __init__(self, agent_id: int):
         self.__bid = None
@@ -16,7 +20,6 @@ class AbstractAction(metaclass=ABCMeta):
 
     def set_time_offered(self, time: float):
         self.__time_offered = time
-        return self
 
     def get_time_offered(self):
         return self.__time_offered
@@ -51,6 +54,3 @@ class EndNegotiation(AbstractAction):
 
     def get_agent_id(self):
         return self.__agent_id
-
-if __name__ == "__main__":
-    pass

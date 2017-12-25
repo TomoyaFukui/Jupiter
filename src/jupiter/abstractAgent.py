@@ -18,8 +18,6 @@ class AbstractAgent(metaclass=ABCMeta):
     def __init__(self, utility_space: abstractUtilitySpace.AbstractUtilitySpace,
                 negotiation_rule: negotiationRule.NegotiationRule, agent_id:int, agent_num:int):
         """
-        初期化処理を行う
-
         :param AbstractUtilitySpace utility_space: 効用空間の情報が取得できる
         :param NegotiationRule negotiation_rule: 交渉の時間やタイプ，現在の正規化時間が取得できる
         :param int agent_id: 自分のエージェントに割り振られたid
