@@ -24,6 +24,12 @@ class Jupiter:
     また，全体の管理を行う．
     '''
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
+        """
+        :param TypeOfNegotiation negotiation_type:　交渉のタイプ
+        :param int negotiation_time: 交渉の最大時間
+        :param str setting_file_name: 交渉ドメインの設定ファイル
+        :param List[str] file_names: 交渉ドメインファイルのリスト
+        """
         if negotiation_type == negotiationRule.TypeOfNegotiation.Turn:
             self.__rule = negotiationRule.NegotiationRuleTurn(negotiation_time)
         elif negotiation_type == negotiationRule.TypeOfNegotiation.Time:
@@ -47,6 +53,11 @@ class Jupiter:
         self.__get_agreement_list = []
 
     def set_agent(self, agent_name):
+        """
+        エージェントを登録する
+
+        :param str agent_name: 自動交渉を行うエージェントを登録する
+        """
         instance = globals()[agent_name]
         self.__agent_list.append(instance(
                             self.__utilities.get_utility_space(len(self.__agent_list)),
@@ -55,6 +66,12 @@ class Jupiter:
         self.display.set_agent_name(self.__agent_list[-1].get_name())
 
     def set_name(self, agent_name):
+        """
+        エージェントを登録する．
+        デバッグ用
+
+        :param str agent_name: 自動交渉を行うエージェントを登録する
+        """
         self.__agent_list.append(LinearAgent(
                             self.__utilities.get_utility_space(len(self.__agent_list)),
                             self.__rule,
@@ -62,6 +79,11 @@ class Jupiter:
         self.display.set_agent_name(agent_name)
 
     def set_java_agent(self, port:int):
+        """
+        Java実装エージェントと通信を行うエージェントを登録する．
+
+        :param int port: 通信するポート番号
+        """
         self.__agent_list.append(comunicateJavaAgent.JavaAgent(
                                 self.__setting_file_name,
                                 self.__utilities.get_utility_space(len(self.__agent_list)),
@@ -69,15 +91,23 @@ class Jupiter:
                                 len(self.__agent_list), len(self.__file_names), port))
         self.display.set_agent_name(self.__agent_list[-1].get_name())
 
-    def set_improvement_agent(self):
-        self.__agent_list.append(ImprovementAgent(
-                                self.__setting_file_name,
-                                self.__utilities.get_utility_space(len(self.__agent_list)),
-                                self.__rule,
-                                len(self.__agent_list), len(self.__file_names)))
-        self.display.set_agent_name(self.__agent_list[-1].get_name())
+    # def set_improvement_agent(self):
+    #     self.__agent_list.append(ImprovementAgent(
+    #                             self.__setting_file_name,
+    #                             self.__utilities.get_utility_space(len(self.__agent_list)),
+    #                             self.__rule,
+    #                             len(self.__agent_list), len(self.__file_names)))
+    #     self.display.set_agent_name(self.__agent_list[-1].get_name())
 
     def do_negotiation(self, is_printing: bool, print_times=10) -> bool:
+        """
+        提案応答ゲームを行う
+
+        :param bool is_printing: 描画するかどうかのフラグ
+        :param int print_times: 何巡毎に描画を行うか
+        :rtype: bool
+        :return: 正常に自動交渉が終了したかどうかのbool
+        """
         if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
             self.__rule._NegotiationRuleTurn__start_negotiation()
         elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time:
@@ -173,22 +203,31 @@ class Jupiter:
         self.__get_agreement_list.append(agreement)
         return True
 
-    def display_points_end(self):
-        if len(self.__agent_list) == 3:
-            self.display.display_plot3_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])
-        elif len(self.__agent_list) == 2:
-            self.display.display_plot2_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])
+    # def display_points_end(self):
+    #     if len(self.__agent_list) == 3:
+    #         self.display.display_plot3_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])
+    #     elif len(self.__agent_list) == 2:
+    #         self.display.display_plot2_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])
 
     # def display(self):
     #     self.display.show()
 
     def set_save_pictures_Flag(self):
+        """
+        描画内容のセーブフラグを立てる．
+        """
         self.display.set_save_flag()
 
     def set_notebook_flag(self):
+        """
+        jupyter notebook上で実行する際に，そのフラグを立てる．
+        """
         self.display.set_jupyter_notebook_flag()
 
     def save_history_as_json(self):
+        """
+        提案応答履歴をjson形式で保存する．
+        """
         def action_to_dict(action: agentAction.AbstractAction):
             action_dict = {}
             if isinstance(action, agentAction.Accept):
@@ -240,11 +279,23 @@ class Jupiter:
         return True
 
     def get_agent_num(self):
+        """
+        自動交渉に参加するエージェントの数を返す
+
+        :rtype: int
+        :return: 自動交渉に参加するエージェントの数
+        """
         return len(self.__agent_list)
-    def get_utility(self, index, bid_, time_):
-        return self.__utilities.get_utility_space(index).get_utility_discounted(bid_, time_)
+    # def get_utility(self, index, bid_, time_):
+    #     return self.__utilities.get_utility_space(index).get_utility_discounted(bid_, time_)
 
 def display_log(file_name, number_of_repeating):
+    '''
+    指定した提案応答履歴から，指定したindexの提案応答ゲームを再生する．
+
+    :param str file_name: 再生したい提案応答ゲームの履歴のパス
+    :param int number_of_repeating: 再生したい提案応答ゲームのindex
+    '''
     def set_jupiter(history_dictionary):
         if history_dictionary['rule']['type'] == 'turn':
             negotiation_type = negotiationRule.TypeOfNegotiation.Turn
