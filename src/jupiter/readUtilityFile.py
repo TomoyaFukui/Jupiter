@@ -4,6 +4,9 @@ import pandas as pd
 import numpy as np
 
 class ReadXML():
+    '''
+    Geniusで作成された効用ドメインファイルを読み込む
+    '''
     def __init__(self):
         self.__all_records = []
         self.__size = 0
@@ -66,6 +69,13 @@ class ReadXML():
 
 
     def create_utility(self, file_name):
+        '''
+        効用ドメインファイルを読み込んで，内容をリストで返す
+
+        :param str file_name: 読み込みたいファイルのパス
+        :rtype: List
+        :return: 読み込んだ情報のリスト
+        '''
         self.__all_records = []
         try:
             tree = ET.parse(file_name)
@@ -83,11 +93,11 @@ class ReadXML():
         #return pd.DataFrame(read_domain.all_records)
         return self.__all_records
 
-    def print_all_records(self):
+    def __print_all_records(self):
         print(self.__all_records)
 
-if __name__ == '__main__':
-    read_domain = ReadXML()
-    #read_domain.create_utility('Domain2/Domain2_util1.xml')
-    read_domain.create_utility('Jobs/Jobs_util1.xml')
-    read_domain.print_all_records()
+# if __name__ == '__main__':
+#     read_domain = ReadXML()
+#     #read_domain.create_utility('Domain2/Domain2_util1.xml')
+#     read_domain.create_utility('Jobs/Jobs_util1.xml')
+#     read_domain.__print_all_records()

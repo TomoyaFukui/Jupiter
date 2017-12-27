@@ -9,7 +9,6 @@ import readUtilityFile
 import bid
 import sys
 import os
-# sys.path.append('cython')
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/cython')
 import make_bid
 import numpy.random as rand

@@ -1,4 +1,6 @@
 """
+ imported from https://github.com/AtsushiSakai/matplotrecorder
+
  A simple Python module for recording matplotlib animation
 
  This tool use convert command of ImageMagick
@@ -18,7 +20,6 @@
  - generate movie
 
     matplotrecorder.save_movie("animation.gif", 0.1)
-
 """
 
 import sys

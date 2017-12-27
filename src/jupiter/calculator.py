@@ -10,7 +10,15 @@ import bid
 #パレート距離やナッシュ距離を計算する
 # JupiterからGUIクラスを通じてこのクラスを使う
 class Calculator:
-    def __init__(self, issue_size_list: List[int], weight_np_list: List[np.array], discount_list: List[float], reservation_value_list: List[float]):
+    def __init__(self, issue_size_list: List[int], weight_np_list: List[np.array],
+            discount_list: List[float], reservation_value_list: List[float]):
+        '''
+        :param List[int] issue_size_list: 交渉ドメインの各論点の数のList
+        :param List[np.array] weight_np_list: 各エージェントが持つ効用値のList
+        :param List[float] discount_list: 各エージェントが持つ割引効用のList
+        :param List[float] reservation_value_list: 各エージェントが持つ留保価格のList
+        '''
+
         self.__size_list = issue_size_list
         self.__evaluations_np_list = weight_np_list
         self.__discout_factor_list = discount_list
@@ -97,9 +105,21 @@ class Calculator:
         #        self.nash_points_utility_value.append(value)
 
     def get_agreement_points(self):
+        '''
+        合意案を返す
+
+        :rtype: [[int], [float]]
+        :return: 合意案のインデックスのリスト，全プレイヤーのその効用値のリスト，のリスト
+        '''
         return (self.agreement_points, self.agreement_points_utility_value)
 
     def get_parato_points(self):
+        '''
+        パレート点を返す
+
+        :rtype: [[int], [float]]
+        :return: パレート点のインデックスのリスト，全プレイヤーの効用値のリスト，のリスト
+        '''
         return (self.parato_points, self.parato_points_utility_value)
 
     def get_utilities(self, index_list_list: [[[int], float]]):
@@ -117,7 +137,15 @@ class Calculator:
         return value_list_list
 
     def get_utility(self, index_list: [int], time=0.0, is_discounted=True):
-        #print(index_time_list)
+        '''
+        全プレイヤーの効用値のリストを返す．
+
+        :param List[int] index_list: 計算したい提案のindexのリスト
+        :param float time: 提案が行われた時間
+        :param bool is_discounted: 割引効用を加味するかどうかのフラグ
+        :rtype: List[float]
+        :return: 全プレイヤーの効用値のリスト
+        '''
         value_list = []
         for player_index in range(len(self.__evaluations_np_list)):
             value = 0
@@ -129,17 +157,32 @@ class Calculator:
         return value_list
 
     def get_discount_reservation_value_list(self, time):
+        '''
+        割引された留保価格のリストを返す
+
+        :param time float: 提案が行われた時間
+        :rtype: float
+        :return: 割引された留保価格のリスト
+        '''
         ret_list = []
         for reservation, discount in zip(self.__reservation_list, self.__discout_factor_list):
             ret_list.append(value * pow(discount, time))
         return ret_list
 
-    def test(self):
-        bid_ = bid.Bid(len(self.__size_list))
-        print("parato distance:", self.get_parato_distance(bid_.get_indexes()))
-        print("nash distance:", self.get_nash_distance(bid_.get_indexes()))
+    # def test(self):
+    #     bid_ = bid.Bid(len(self.__size_list))
+    #     print("parato distance:", self.get_parato_distance(bid_.get_indexes()))
+    #     print("nash distance:", self.get_nash_distance(bid_.get_indexes()))
 
     def get_parato_distance(self, index_list: List[int], time:float) -> float:
+        '''
+        パレート距離を計算する
+
+        :param List[int] index_list: 計算したい提案のindexのリスト
+        :param time float: 提案が行われた時間
+        :rtype: float
+        :return: パレート距離
+        '''
         point_np = np.array(self.get_utility(index_list, time), dtype=np.float32)
         parato_points_np = np.array(self.parato_points_utility_value, dtype=np.float32)
         min_distance = 9999
@@ -151,6 +194,13 @@ class Calculator:
         return min_distance
 
     def get_nash_distance(self, index_list: List[int]) -> float:
+        '''
+        ナッシュ距離を計算する
+
+        :param List[int] index_list: 計算したい提案のindexのリスト
+        :rtype: float
+        :return: ナッシュ距離
+        '''
         point_np = np.array(self.get_utility(index_list, is_discounted=False), dtype=np.float32)
         nash_points_np = np.array(self.nash_points_utility_value, dtype=np.float32)
         return np.linalg.norm(point_np - nash_points_np[0])

@@ -14,7 +14,16 @@ import bid
 import matplotrecorder
 
 class Display:
+    '''
+    描画処理を行う
+    '''
     def __init__(self, issue_size_list, weight_np_list, discount_list, reservation_value_list):
+        '''
+        :param List[int] issue_size_list: 交渉ドメインの各論点の数のList
+        :param List[np.array] weight_np_list: 各エージェントが持つ効用値のList
+        :param List[float] discount_list: 各エージェントが持つ割引効用のList
+        :param List[float] reservation_value_list: 各エージェントが持つ留保価格のList
+        '''
         self.__calculate = calculator.Calculator(issue_size_list, weight_np_list, discount_list, reservation_value_list)
         self.__agent_num = len(weight_np_list)
         self.__agent_name_list = []
@@ -22,12 +31,18 @@ class Display:
         self.__is_notebook = False
 
     def plot_initialize(self):
+        '''
+        描画について，初期化する
+        '''
         if self.__agent_num == 2:
             self.__initialize_plot2()
         elif self.__agent_num == 3:
             self.__initialize_plot3()
 
     def delete_plot(self):
+        '''
+        描画について，前回描画してきた内容をdeleteする．
+        '''
         if self.__agent_num == 2:
             del self.__fig
             del self.__ax
@@ -182,9 +197,17 @@ class Display:
             matplotrecorder.save_movie("movies/animation.gif", 0.1)
 
     def show(self):
+        '''
+        交渉終了時に描画を消したくない場合は，この関数を呼び出す．
+        '''
         plt.show()
 
     def update(self, action_list):
+        '''
+        描画内容を動的に書き換える
+
+        :param List[AbstractAction] action_list: 描画を行いたいactionのリスト
+        '''
         if self.__is_notebook:
             self.delete_plot()
             self.plot_initialize()
@@ -194,25 +217,49 @@ class Display:
             self.__display_plot3_update(action_list)
 
     def update_end(self, action_list, get_agreement):
+        '''
+        描画内容を動的に書き換える
+
+        :param List[AbstractAction] action_list: 描画を行いたいActionのリスト
+        :param [bool, AbstractAction] get_agreement: 合意成功かどうかのフラグ，交渉終了の際のAction，のリスト
+        '''
         if self.__agent_num == 2:
             self.__display_plot2_update_end(action_list, get_agreement)
         elif self.__agent_num == 3:
             self.__display_plot3_update_end(action_list, get_agreement)
 
     def set_agent_name(self, name):
+        '''
+        交渉参加エージェントの名前をセットする．
+
+        :param str name: エージェントの名前
+        '''
         self.__agent_name_list.append(name)
 
     def get_parato_distance(self, action):
+        '''
+        パレート距離を取得する．
+
+        :param AbstractAction action: エージェントの名前
+        :rtype: float
+        :return: パレート距離
+        '''
         return self.__calculate.get_parato_distance(action.get_bid().get_indexes(), action.get_time_offered())
 
     def set_save_flag(self):
+        '''
+        描画してきた内容について，pngとgifで保存する場合にセットするフラグ
+        '''
         self.__is_saved = True
 
     def set_jupyter_notebook_flag(self):
+        '''
+        jupyter notebook上で実行したい場合にセットするフラグ．
+        '''
         self.__is_notebook = True
 
-    def display_from_log(self, file_name):
-        pass
+    # def display_from_log(self, file_name):
+    #     pass
 
     # def display_agreement_points(self):
     #     fig = plt.figure()

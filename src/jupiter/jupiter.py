@@ -19,6 +19,10 @@ from boulwareAgent import*
 from concederAgent import*
 
 class Jupiter:
+    '''
+    自動交渉を行うクラス
+    また，全体の管理を行う．
+    '''
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
         if negotiation_type == negotiationRule.TypeOfNegotiation.Turn:
             self.__rule = negotiationRule.NegotiationRuleTurn(negotiation_time)

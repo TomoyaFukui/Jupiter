@@ -14,10 +14,6 @@ class SummrizationOfUtilitySpace:
         for i, file_name in enumerate(file_name_list):
             self.__utility_space_list.append(utilitySpace.UtilitySpace(file_name))
 
-        #self.__calculate_distance = calculateDistance.CaluculateDistance(
-        #                                self.__utility_space_list[0].get_issue_size_list(),
-        #                                weight_np_list)
-
     def __print_all(self):
         for utility_space in self.__utility_space_list:
             utility_space.print_all()
