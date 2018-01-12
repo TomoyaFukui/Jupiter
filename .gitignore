@@ -1,5 +1,3 @@
-*.swp
-*.DS_Store
 *.pyc
 *.ipynb
 *.json
@@ -7,6 +5,3 @@ src/__pycache__/
 src/agents/__pycache__/
 src/movies/
 src/pictures/
-src/main.py
-memo.md
-
