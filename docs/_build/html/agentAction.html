@@ -1,0 +1,296 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>agentAction module &#8212; jupiter 1.0.0alpha ドキュメント</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="bid module" href="bid.html" />
+    <link rel="prev" title="abstractUtilitySpace module" href="abstractUtilitySpace.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="bid.html" title="bid module"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="abstractUtilitySpace.html" title="abstractUtilitySpace module"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-agentAction">
+<span id="agentaction-module"></span><h1>agentAction module<a class="headerlink" href="#module-agentAction" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<dl class="class">
+<dt id="agentAction.AbstractAction">
+<em class="property">class </em><code class="descclassname">agentAction.</code><code class="descname">AbstractAction</code><span class="sig-paren">(</span><em>agent_id: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#AbstractAction"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.AbstractAction" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>自動交渉エージェントが起こすActionの抽象クラス
+各Actionはこのクラスを継承すること</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>agent_id</strong> (<em>int</em>) – 行動を起こしたエージェントに割り振られるid</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="agentAction.AbstractAction.set_time_offered">
+<code class="descname">set_time_offered</code><span class="sig-paren">(</span><em>time: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#AbstractAction.set_time_offered"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.AbstractAction.set_time_offered" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>行動を起こした時間がsetされる</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>time</strong> (<em>float</em>) – 行動を起こした時間</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="agentAction.AbstractAction.get_time_offered">
+<code class="descname">get_time_offered</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#AbstractAction.get_time_offered"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.AbstractAction.get_time_offered" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>行動を起こした時間を返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">行動を起こした時間</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="agentAction.Accept">
+<em class="property">class </em><code class="descclassname">agentAction.</code><code class="descname">Accept</code><span class="sig-paren">(</span><em>agent_id: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#Accept"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.Accept" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <a class="reference internal" href="#agentAction.AbstractAction" title="agentAction.AbstractAction"><code class="xref py py-class docutils literal"><span class="pre">agentAction.AbstractAction</span></code></a></p>
+<p>エージェントが起こすことのできる行動の1つ
+受容を表す．</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>agent_id</strong> (<em>int</em>) – 行動を起こしたエージェントに割り振られたid</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="agentAction.Accept.set_bid">
+<code class="descname">set_bid</code><span class="sig-paren">(</span><em>bid_: bid.Bid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#Accept.set_bid"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.Accept.set_bid" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>受容したbidがsetされる</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>bid</strong> (<a class="reference internal" href="bid.html#bid.Bid" title="bid.Bid"><em>Bid</em></a>) – 受容したBid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="agentAction.Accept.get_agent_id">
+<code class="descname">get_agent_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#Accept.get_agent_id"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.Accept.get_agent_id" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>行動を起こしたエージェントのidを返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">行動を起こしたエージェントのid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="agentAction.Accept.get_bid">
+<code class="descname">get_bid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#Accept.get_bid"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.Accept.get_bid" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>受容したBidを返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body"><a class="reference internal" href="bid.html#bid.Bid" title="bid.Bid">Bid</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">受容した提案</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="agentAction.Offer">
+<em class="property">class </em><code class="descclassname">agentAction.</code><code class="descname">Offer</code><span class="sig-paren">(</span><em>agent_id</em>, <em>bid_: bid.Bid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#Offer"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.Offer" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <a class="reference internal" href="#agentAction.AbstractAction" title="agentAction.AbstractAction"><code class="xref py py-class docutils literal"><span class="pre">agentAction.AbstractAction</span></code></a></p>
+<p>エージェントが起こすことのできる行動の1つ
+提案を表す．</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>agent_id</strong> (<em>int</em>) – 行動を起こしたエージェントに割り振られたid</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="agentAction.Offer.get_agent_id">
+<code class="descname">get_agent_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#Offer.get_agent_id"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.Offer.get_agent_id" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>行動を起こしたエージェントのidを返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">行動を起こしたエージェントのid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="agentAction.Offer.get_bid">
+<code class="descname">get_bid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#Offer.get_bid"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.Offer.get_bid" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>提案を返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body"><a class="reference internal" href="bid.html#bid.Bid" title="bid.Bid">Bid</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">エージェントの提案</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="agentAction.EndNegotiation">
+<em class="property">class </em><code class="descclassname">agentAction.</code><code class="descname">EndNegotiation</code><span class="sig-paren">(</span><em>agent_id: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#EndNegotiation"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.EndNegotiation" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <a class="reference internal" href="#agentAction.AbstractAction" title="agentAction.AbstractAction"><code class="xref py py-class docutils literal"><span class="pre">agentAction.AbstractAction</span></code></a></p>
+<p>エージェントが起こすことのできる行動の1つ
+交渉打ち切りを表す．</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>agent_id</strong> (<em>int</em>) – 行動を起こしたエージェントに割り振られたid</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="agentAction.EndNegotiation.get_agent_id">
+<code class="descname">get_agent_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/agentAction.html#EndNegotiation.get_agent_id"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#agentAction.EndNegotiation.get_agent_id" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>行動を起こしたエージェントのidを返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">行動を起こしたエージェントのid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="abstractUtilitySpace.html"
+                        title="前の章へ">abstractUtilitySpace module</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="bid.html"
+                        title="次の章へ">bid module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="bid.html" title="bid module"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="abstractUtilitySpace.html" title="abstractUtilitySpace module"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Tomoya Fukui.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5 で生成しました。
+    </div>
+  </body>
+</html>

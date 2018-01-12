@@ -1,0 +1,456 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>jupiter &#8212; jupiter 1.0.0alpha ドキュメント</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">モジュールコード</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>jupiter のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/../agents&#39;</span><span class="p">)</span>
+<span class="n">ABSPATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;/../&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">summrizationOfUtilitySpace</span>
+<span class="kn">import</span> <span class="nn">negotiationRule</span>
+<span class="kn">import</span> <span class="nn">display</span>
+<span class="kn">import</span> <span class="nn">agentAction</span>
+<span class="kn">import</span> <span class="nn">comunicateJavaAgent</span>
+<span class="kn">from</span> <span class="nn">linearAgent</span> <span class="k">import</span><span class="o">*</span>
+<span class="kn">from</span> <span class="nn">boulwareAgent</span> <span class="k">import</span><span class="o">*</span>
+<span class="kn">from</span> <span class="nn">concederAgent</span> <span class="k">import</span><span class="o">*</span>
+
+<div class="viewcode-block" id="Jupiter"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter">[ドキュメント]</a><span class="k">class</span> <span class="nc">Jupiter</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    自動交渉を行うクラス</span>
+<span class="sd">    また，全体の管理を行う．</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">negotiation_type</span><span class="p">,</span> <span class="n">negotiation_time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">setting_file_name</span><span class="p">,</span> <span class="o">*</span><span class="n">file_names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param TypeOfNegotiation negotiation_type: 交渉のタイプ</span>
+<span class="sd">        :param int negotiation_time: 交渉の最大時間</span>
+<span class="sd">        :param str setting_file_name: 交渉ドメインの設定ファイル</span>
+<span class="sd">        :param List[str] file_names: 交渉ドメインファイルのリスト</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">negotiation_type</span> <span class="o">==</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Turn</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span> <span class="o">=</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">NegotiationRuleTurn</span><span class="p">(</span><span class="n">negotiation_time</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">negotiation_type</span> <span class="o">==</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Time</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span> <span class="o">=</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">NegotiationRuleTime</span><span class="p">(</span><span class="n">negotiation_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;negotiation type error in Jupiter init&#39;</span><span class="p">)</span>
+        <span class="n">file_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">file_names</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;Users&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_names</span><span class="p">)):</span>
+                <span class="n">file_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ABSPATH</span> <span class="o">+</span> <span class="n">file_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span> <span class="o">=</span> <span class="n">summrizationOfUtilitySpace</span><span class="o">.</span><span class="n">SummrizationOfUtilitySpace</span><span class="p">(</span><span class="n">file_names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__setting_file_name</span> <span class="o">=</span> <span class="n">setting_file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__file_names</span> <span class="o">=</span> <span class="n">file_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span><span class="o">.</span><span class="n">Display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">get_utility_space</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_issue_size_list</span><span class="p">(),</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">get_weight_np_list</span><span class="p">(),</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">get_discount_factor_list</span><span class="p">(),</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">get_reservation_value_list</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__action_list_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__get_agreement_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Jupiter.set_agent"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter.set_agent">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">set_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        エージェントを登録する</span>
+
+<span class="sd">        :param str agent_name: 自動交渉を行うエージェントを登録する</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">agent_name</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">get_utility_space</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">)),</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="p">,</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__file_names</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_agent_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Jupiter.set_name"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter.set_name">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        エージェントを登録する．</span>
+<span class="sd">        デバッグ用</span>
+
+<span class="sd">        :param str agent_name: 自動交渉を行うエージェントを登録する</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LinearAgent</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">get_utility_space</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">)),</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="p">,</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__file_names</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_agent_name</span><span class="p">(</span><span class="n">agent_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Jupiter.set_java_agent"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter.set_java_agent">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">set_java_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span><span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Java実装エージェントと通信を行うエージェントを登録する．</span>
+
+<span class="sd">        :param int port: 通信するポート番号</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comunicateJavaAgent</span><span class="o">.</span><span class="n">JavaAgent</span><span class="p">(</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">__setting_file_name</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">get_utility_space</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">)),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="p">,</span>
+                                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__file_names</span><span class="p">),</span> <span class="n">port</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_agent_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span></div>
+
+    <span class="c1"># def set_improvement_agent(self):</span>
+    <span class="c1">#     self.__agent_list.append(ImprovementAgent(</span>
+    <span class="c1">#                             self.__setting_file_name,</span>
+    <span class="c1">#                             self.__utilities.get_utility_space(len(self.__agent_list)),</span>
+    <span class="c1">#                             self.__rule,</span>
+    <span class="c1">#                             len(self.__agent_list), len(self.__file_names)))</span>
+    <span class="c1">#     self.display.set_agent_name(self.__agent_list[-1].get_name())</span>
+
+<div class="viewcode-block" id="Jupiter.do_negotiation"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter.do_negotiation">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">do_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_printing</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">print_times</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        提案応答ゲームを行う</span>
+
+<span class="sd">        :param bool is_printing: 描画するかどうかのフラグ</span>
+<span class="sd">        :param int print_times: 何巡毎に描画を行うか</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        :return: 正常に自動交渉が終了したかどうかのbool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Turn</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">_NegotiationRuleTurn__start_negotiation</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Time</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">_NegotiationRuleTime__start_negotiation</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unexpected invalid NegotiationRuleType&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">is_printing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">plot_initialize</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start negotiation:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_agreement_list</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">receive_start_negotiation</span><span class="p">()</span>
+
+        <span class="n">action_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__accept_num</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">can_proceed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">can_proceed</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">)):</span>
+                <span class="c1">#agentにアクションを起こさせて、時間内かつアクションが有効か検証する</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">send_action</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_time_now</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__end_negotiation</span><span class="p">(</span><span class="n">action_list</span><span class="p">,</span> <span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_valid_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">action_list</span><span class="p">)):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unexpected invalid action caused&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">:</span>
+                        <span class="n">agent</span><span class="o">.</span><span class="n">receive_end_negotiation</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">Accept</span><span class="p">):</span>
+                    <span class="n">action</span><span class="o">.</span><span class="n">set_bid</span><span class="p">(</span><span class="n">action_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_bid</span><span class="p">())</span>
+                <span class="n">action</span><span class="o">.</span><span class="n">set_time_offered</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_time_now</span><span class="p">())</span>
+                <span class="n">action_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="c1"># if is_printing:</span>
+                <span class="c1"># if not isinstance(action, agentAction.EndNegotiation):</span>
+                <span class="c1">#     print(self.__rule.get_time_now() , self.__agent_list[action.get_agent_id()].get_name(),</span>
+                <span class="c1">#         action_list[-1].__class__.__name__, action_list[-1].get_bid().get_indexes())</span>
+                <span class="c1">#各agentにアクションを知らせる</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">receive_action</span><span class="p">(</span><span class="n">action_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="c1">#ネゴシエーションの終了判定</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_finished_negotiation</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">is_printing</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update_end</span><span class="p">(</span><span class="n">action_list</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="p">])</span>
+                    <span class="c1"># EndNegotiationもprato_distanceをだせるように</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">EndNegotiation</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;last turn:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_time_now</span><span class="p">())</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;agreement bid:&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">get_bid</span><span class="p">()</span><span class="o">.</span><span class="n">get_indexes</span><span class="p">())</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;parato distance:&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_parato_distance</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
+                        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">agent</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">):</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">get_utility_space</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                                <span class="o">.</span><span class="n">get_utility_discounted</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">get_bid</span><span class="p">(),</span> <span class="n">action</span><span class="o">.</span><span class="n">get_time_offered</span><span class="p">()))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;last turn:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_time_now</span><span class="p">())</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;agreement bid: EndNegotiation&quot;</span><span class="p">)</span>
+                    <span class="c1"># EndNegotiationもprato_distanceをだせるように</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__end_negotiation</span><span class="p">(</span><span class="n">action_list</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Time</span> <span class="ow">and</span> \
+                    <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">_NegotiationRuleTime__proceed_negotiation</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__end_negotiation</span><span class="p">(</span><span class="n">action_list</span><span class="p">,</span> <span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">is_printing</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">action_list</span><span class="p">)</span> <span class="o">%</span> <span class="n">print_times</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">action_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Turn</span><span class="p">:</span>
+                <span class="n">can_proceed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">_NegotiationRuleTurn__proceed_negotiation</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fail to get agreement&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__end_negotiation</span><span class="p">(</span><span class="n">action_list</span><span class="p">,</span> <span class="p">[</span><span class="kc">False</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">__is_valid_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">AbstractAction</span><span class="p">,</span> <span class="n">action_len</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">Accept</span><span class="p">)</span> <span class="ow">and</span> <span class="n">action_len</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;first accept error in agent_id:&#39;</span><span class="p">,</span><span class="n">action</span><span class="o">.</span><span class="n">get_agent_id</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">Offer</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__utilities</span><span class="o">.</span><span class="n">is_valid_bid</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">get_bid</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;bid index error in agent_id:&#39;</span><span class="p">,</span><span class="n">action</span><span class="o">.</span><span class="n">get_agent_id</span><span class="p">())</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__is_finished_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">AbstractAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">EndNegotiation</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">Accept</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__accept_num</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__accept_num</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__accept_num</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__end_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">agreement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">receive_end_negotiation</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__action_list_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__get_agreement_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agreement</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># def display_points_end(self):</span>
+    <span class="c1">#     if len(self.__agent_list) == 3:</span>
+    <span class="c1">#         self.display.display_plot3_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])</span>
+    <span class="c1">#     elif len(self.__agent_list) == 2:</span>
+    <span class="c1">#         self.display.display_plot2_update_end(self.__action_list_list[-1], self.__get_agreement_list[-1])</span>
+
+    <span class="c1"># def display(self):</span>
+    <span class="c1">#     self.display.show()</span>
+
+<div class="viewcode-block" id="Jupiter.set_save_pictures_Flag"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter.set_save_pictures_Flag">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">set_save_pictures_Flag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        描画内容のセーブフラグを立てる．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_save_flag</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Jupiter.set_notebook_flag"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter.set_notebook_flag">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">set_notebook_flag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        jupyter notebook上で実行する際に，そのフラグを立てる．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_jupyter_notebook_flag</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Jupiter.save_history_as_json"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter.save_history_as_json">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">save_history_as_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        提案応答履歴をjson形式で保存する．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">action_to_dict</span><span class="p">(</span><span class="n">action</span><span class="p">:</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">AbstractAction</span><span class="p">):</span>
+            <span class="n">action_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">Accept</span><span class="p">):</span>
+                <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;accept&quot;</span>
+                <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;bid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">get_bid</span><span class="p">()</span><span class="o">.</span><span class="n">get_indexes</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">Offer</span><span class="p">):</span>
+                <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;offer&quot;</span>
+                <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;bid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">get_bid</span><span class="p">()</span><span class="o">.</span><span class="n">get_indexes</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">EndNegotiation</span><span class="p">):</span>
+                <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;end_negotiation&quot;</span>
+            <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">get_agent_id</span><span class="p">()</span>
+            <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">get_time_offered</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">action_dict</span>
+
+        <span class="n">history_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="s2">&quot;setting&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__setting_file_name</span>
+        <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">agent</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">,</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__file_names</span><span class="p">)):</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;agent_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;file_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_name</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+        <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;rule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;rule&quot;</span><span class="p">][</span><span class="s2">&quot;period&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_time_max</span><span class="p">()</span>
+        <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;rule&quot;</span><span class="p">][</span><span class="s2">&quot;repeating&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_agreement_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Turn</span><span class="p">:</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;rule&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;turn&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rule</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Time</span><span class="p">:</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;rule&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span>
+
+        <span class="k">for</span> <span class="n">agreement</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">action_list</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_agreement_list</span> <span class="p">,</span><span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__action_list_list</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">)):</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">agreement</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">history_dictionary</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">action_to_dict</span><span class="p">(</span><span class="n">agreement</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="s2">&quot;is_successful&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agreement</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">history_dictionary</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="s2">&quot;period&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">action_list</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">action_list</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">history_dictionary</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">action_to_dict</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="c1">#print(history_dictionary)</span>
+        <span class="n">time_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">-%H:%M:%S&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;save in &quot;</span> <span class="o">+</span> <span class="n">ABSPATH</span> <span class="o">+</span> <span class="s1">&#39;log/bids&#39;</span> <span class="o">+</span> <span class="n">time_now</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">ABSPATH</span> <span class="o">+</span> <span class="s1">&#39;log/bids&#39;</span> <span class="o">+</span> <span class="n">time_now</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">history_dictionary</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Jupiter.get_agent_num"><a class="viewcode-back" href="../jupiter.html#jupiter.Jupiter.get_agent_num">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_agent_num</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        自動交渉に参加するエージェントの数を返す</span>
+
+<span class="sd">        :rtype: int</span>
+<span class="sd">        :return: 自動交渉に参加するエージェントの数</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__agent_list</span><span class="p">)</span></div></div>
+    <span class="c1"># def get_utility(self, index, bid_, time_):</span>
+    <span class="c1">#     return self.__utilities.get_utility_space(index).get_utility_discounted(bid_, time_)</span>
+
+<div class="viewcode-block" id="display_log"><a class="viewcode-back" href="../jupiter.html#jupiter.display_log">[ドキュメント]</a><span class="k">def</span> <span class="nf">display_log</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">number_of_repeating</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    指定した提案応答履歴から，指定したindexの提案応答ゲームを再生する．</span>
+
+<span class="sd">    :param str file_name: 再生したい提案応答ゲームの履歴のパス</span>
+<span class="sd">    :param int number_of_repeating: 再生したい提案応答ゲームのindex</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">set_jupiter</span><span class="p">(</span><span class="n">history_dictionary</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="s1">&#39;rule&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;turn&#39;</span><span class="p">:</span>
+            <span class="n">negotiation_type</span> <span class="o">=</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Turn</span>
+        <span class="k">elif</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="s1">&#39;rule&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span>
+            <span class="n">negotiation_type</span> <span class="o">=</span> <span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Time</span>
+        <span class="n">negotiation_time</span> <span class="o">=</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="s1">&#39;rule&#39;</span><span class="p">][</span><span class="s1">&#39;period&#39;</span><span class="p">]</span>
+        <span class="n">setting_file_name</span> <span class="o">=</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="s1">&#39;setting&#39;</span><span class="p">]</span>
+        <span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="s2">&quot;size&quot;</span><span class="p">]):</span>
+            <span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;file_name&quot;</span><span class="p">])</span>
+        <span class="c1"># file2 = history_dictionary[&quot;agents&quot;][&quot;1&quot;][&quot;file_name&quot;]</span>
+        <span class="c1"># file3 = history_dictionary[&quot;agents&quot;][&quot;2&quot;][&quot;file_name&quot;]</span>
+        <span class="k">if</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">jupiter</span> <span class="o">=</span> <span class="n">Jupiter</span><span class="p">(</span><span class="n">negotiation_type</span><span class="p">,</span> <span class="n">negotiation_time</span><span class="p">,</span> <span class="n">setting_file_name</span><span class="p">,</span> <span class="n">file_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">file_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">jupiter</span> <span class="o">=</span> <span class="n">Jupiter</span><span class="p">(</span><span class="n">negotiation_type</span><span class="p">,</span> <span class="n">negotiation_time</span><span class="p">,</span> <span class="n">setting_file_name</span><span class="p">,</span> <span class="n">file_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">file_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">file_list</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="s2">&quot;size&quot;</span><span class="p">]):</span>
+            <span class="n">jupiter</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;agent_name&quot;</span><span class="p">])</span>
+        <span class="c1"># jupiter.set_agent(history_dictionary[&quot;agents&quot;][&quot;1&quot;][&quot;agent_name&quot;])</span>
+        <span class="c1"># jupiter.set_agent(history_dictionary[&quot;agents&quot;][&quot;2&quot;][&quot;agent_name&quot;])</span>
+        <span class="k">return</span> <span class="n">jupiter</span>
+
+    <span class="k">def</span> <span class="nf">dict_to_action</span><span class="p">(</span><span class="n">action_dict</span><span class="p">:</span><span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;accept&quot;</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">Accept</span><span class="p">(</span><span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">set_bid</span><span class="p">(</span><span class="n">bid</span><span class="o">.</span><span class="n">Bid</span><span class="p">(</span><span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;bid&quot;</span><span class="p">]))</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">set_time_offered</span><span class="p">(</span><span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;offer&quot;</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">Offer</span><span class="p">(</span><span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">bid</span><span class="o">.</span><span class="n">Bid</span><span class="p">(</span><span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;bid&quot;</span><span class="p">]))</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">set_time_offered</span><span class="p">(</span><span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;end_negotiation&quot;</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">agentAction</span><span class="o">.</span><span class="n">EndNegotiation</span><span class="p">(</span><span class="n">action_dict</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">action</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span> <span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">history_dictionary</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">jupiter</span> <span class="o">=</span> <span class="n">set_jupiter</span><span class="p">(</span><span class="n">history_dictionary</span><span class="p">)</span>
+
+    <span class="n">jupiter</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">plot_initialize</span><span class="p">()</span>
+    <span class="c1"># last_history = history_dictionary[str(history_dictionary[&quot;rule&quot;][&quot;repeating&quot;])]</span>
+    <span class="n">last_history</span> <span class="o">=</span> <span class="n">history_dictionary</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">number_of_repeating</span><span class="p">)]</span>
+    <span class="n">action_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">last_history</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="s2">&quot;period&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">action_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dict_to_action</span><span class="p">(</span><span class="n">last_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]))</span>
+        <span class="n">jupiter</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">action_list</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">last_history</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="s2">&quot;is_successful&quot;</span><span class="p">]:</span>
+        <span class="n">jupiter</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update_end</span><span class="p">(</span><span class="n">action_list</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">action_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">jupiter</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update_end</span><span class="p">(</span><span class="n">action_list</span><span class="p">,</span> <span class="p">[</span><span class="kc">False</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;agreement bid:&quot;</span><span class="p">,</span> <span class="n">action_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_bid</span><span class="p">()</span><span class="o">.</span><span class="n">get_indexes</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;parato distance:&quot;</span><span class="p">,</span> <span class="n">jupiter</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_parato_distance</span><span class="p">(</span><span class="n">action_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">jupiter</span><span class="o">.</span><span class="n">get_agent_num</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">history_dictionary</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;agent_name&quot;</span><span class="p">],</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">jupiter</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">action_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_bid</span><span class="p">(),</span> <span class="n">action_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_time_offered</span><span class="p">()))</span>
+    <span class="n">jupiter</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">pass</span>
+    <span class="n">jupiter</span> <span class="o">=</span> <span class="n">Jupiter</span><span class="p">(</span><span class="n">negotiationRule</span><span class="o">.</span><span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Turn</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="s1">&#39;domain/Atlas3/triangularFight.xml&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;domain/Atlas3/triangularFight_util1.xml&#39;</span><span class="p">,</span> <span class="s1">&#39;domain/Atlas3/triangularFight_util2.xml&#39;</span><span class="p">)</span>
+    <span class="n">jupiter</span><span class="o">.</span><span class="n">set_agent</span><span class="p">(</span><span class="s1">&#39;LinearAgent&#39;</span><span class="p">)</span>
+    <span class="c1"># jupiter.set_agent(&#39;LinearAgent&#39;)</span>
+    <span class="n">jupiter</span><span class="o">.</span><span class="n">set_agent</span><span class="p">(</span><span class="s1">&#39;ConcederAgent&#39;</span><span class="p">)</span>
+    <span class="c1"># jupiter.set_agent(&#39;BoulwareAgent&#39;)</span>
+    <span class="c1"># jupiter.set_java_agent(25535)</span>
+
+    <span class="c1">#jupiter.set_notebook_flag()</span>
+    <span class="n">jupiter</span><span class="o">.</span><span class="n">do_negotiation</span><span class="p">(</span><span class="n">is_printing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">print_times</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">jupiter</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >モジュールコード</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Tomoya Fukui.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5 で生成しました。
+    </div>
+  </body>
+</html>

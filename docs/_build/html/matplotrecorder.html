@@ -1,0 +1,142 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>matplotrecorder module &#8212; jupiter 1.0.0alpha ドキュメント</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="negotiationRule module" href="negotiationRule.html" />
+    <link rel="prev" title="jupiter module" href="jupiter.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="negotiationRule.html" title="negotiationRule module"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="jupiter.html" title="jupiter module"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-matplotrecorder">
+<span id="matplotrecorder-module"></span><h1>matplotrecorder module<a class="headerlink" href="#module-matplotrecorder" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>imported from <a class="reference external" href="https://github.com/AtsushiSakai/matplotrecorder">https://github.com/AtsushiSakai/matplotrecorder</a></p>
+<p>A simple Python module for recording matplotlib animation</p>
+<p>This tool use convert command of ImageMagick</p>
+<p>author: Atsushi Sakai</p>
+<p>How to use:</p>
+<ul>
+<li><p class="first">import</p>
+<blockquote>
+<div><p>from matplotrecorder import matplotrecorder</p>
+</div></blockquote>
+</li>
+<li><p class="first">save file</p>
+<blockquote>
+<div><p>matplotrecorder.save_frame()</p>
+</div></blockquote>
+</li>
+<li><p class="first">generate movie</p>
+<blockquote>
+<div><p>matplotrecorder.save_movie(「animation.gif」, 0.1)</p>
+</div></blockquote>
+</li>
+</ul>
+<dl class="function">
+<dt id="matplotrecorder.save_frame">
+<code class="descclassname">matplotrecorder.</code><code class="descname">save_frame</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/matplotrecorder.html#save_frame"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#matplotrecorder.save_frame" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Save a frame for movie</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="matplotrecorder.save_movie">
+<code class="descclassname">matplotrecorder.</code><code class="descname">save_movie</code><span class="sig-paren">(</span><em>fname</em>, <em>d_pause</em>, <em>monitor=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/matplotrecorder.html#save_movie"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#matplotrecorder.save_movie" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>Save movie as gif</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="jupiter.html"
+                        title="前の章へ">jupiter module</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="negotiationRule.html"
+                        title="次の章へ">negotiationRule module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="negotiationRule.html" title="negotiationRule module"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="jupiter.html" title="jupiter module"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Tomoya Fukui.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5 で生成しました。
+    </div>
+  </body>
+</html>

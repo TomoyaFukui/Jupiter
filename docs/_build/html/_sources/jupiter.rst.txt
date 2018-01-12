@@ -1,0 +1,7 @@
+jupiter module
+==============
+
+.. automodule:: jupiter
+    :members:
+    :undoc-members:
+    :show-inheritance:

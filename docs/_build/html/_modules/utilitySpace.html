@@ -1,0 +1,324 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>utilitySpace &#8212; jupiter 1.0.0alpha ドキュメント</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">モジュールコード</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>utilitySpace のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/agents&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">abstractUtilitySpace</span>
+<span class="kn">import</span> <span class="nn">readUtilityFile</span>
+<span class="kn">import</span> <span class="nn">bid</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/cython&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">make_bid</span>
+<span class="kn">import</span> <span class="nn">numpy.random</span> <span class="k">as</span> <span class="nn">rand</span>
+
+<div class="viewcode-block" id="UtilitySpace"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace">[ドキュメント]</a><span class="k">class</span> <span class="nc">UtilitySpace</span><span class="p">(</span><span class="n">abstractUtilitySpace</span><span class="o">.</span><span class="n">AbstractUtilitySpace</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    線形効用空間のクラス</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        :param str file_name: 効用ドメインファイルのパス</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_utility_space</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__set_utility_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__file_name</span> <span class="o">=</span> <span class="n">file_name</span>
+        <span class="n">all_records</span> <span class="o">=</span> <span class="n">readUtilityFile</span><span class="o">.</span><span class="n">ReadXML</span><span class="p">()</span><span class="o">.</span><span class="n">create_utility</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__discout_factor</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">)(</span><span class="n">all_records</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;discount_factor&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__reservation_value</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">)(</span><span class="n">all_records</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;reservation&#39;</span><span class="p">])</span>
+
+        <span class="n">issue_size</span> <span class="o">=</span> <span class="n">all_records</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name2index_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__index2name_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">issue_size</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">all_records</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="o">+</span><span class="n">issue_size</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">name2index</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">all_records</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="o">+</span><span class="n">issue_size</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__name2index_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name2index</span><span class="p">)</span>
+            <span class="n">index2name</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">):</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">all_records</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="o">+</span><span class="n">issue_size</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__index2name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index2name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__weight_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">issue_size</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">issue_size</span> <span class="o">-</span> <span class="n">i</span><span class="p">):</span>
+                <span class="n">j_changed</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">3</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">all_records</span><span class="p">[</span><span class="n">j_changed</span><span class="p">][</span><span class="s2">&quot;index&quot;</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__weight_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">((</span><span class="n">all_records</span><span class="p">[</span><span class="n">j_changed</span><span class="p">])[</span><span class="s2">&quot;weight&quot;</span><span class="p">]))</span>
+                    <span class="k">break</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__issue_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">issue_size</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">issue_size</span> <span class="o">-</span> <span class="n">i</span><span class="p">):</span>
+                <span class="n">j_changed</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">issue_size</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">all_records</span><span class="p">[</span><span class="n">j_changed</span><span class="p">][</span><span class="s2">&quot;index&quot;</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__issue_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">all_records</span><span class="p">[</span><span class="n">j_changed</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">((</span><span class="n">all_records</span><span class="p">[</span><span class="n">j_changed</span><span class="p">])[</span><span class="s2">&quot;issue&quot;</span><span class="p">]))</span>
+                    <span class="k">break</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__evaluations_np_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__calc_weight</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__random</span> <span class="o">=</span> <span class="n">random</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__calc_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">evaluations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">evaluations_np_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">issue_dict</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__issue_list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                <span class="c1">#print(issue_dict[&quot;issue&quot;][str(j+1)])</span>
+                <span class="n">evaluations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">issue_dict</span><span class="p">[</span><span class="s2">&quot;issue&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)]))</span>
+            <span class="c1">#evaluations_list.append(evaluations)</span>
+            <span class="n">evaluations_np_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">evaluations</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+            <span class="n">evaluations_np_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">evaluations_np_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">evaluations_np_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">evaluations_np_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weight_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">evaluations</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1">#evaluations_np_list.append(np.array(evaluations_list[i], np.float64))</span>
+        <span class="c1">#for i in range(len(self.__issue_size_list)):</span>
+            <span class="c1">#evaluations_np[i] = evaluations_np[i] / np.max(evaluations_np[i])</span>
+        <span class="k">return</span> <span class="n">evaluations_np_list</span>
+
+<div class="viewcode-block" id="UtilitySpace.get_file_name"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_file_name">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        交渉ドメインファイルのパスを返す</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :return: 交渉ドメインファイルのパス</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__file_name</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_index"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_index">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_number</span><span class="p">,</span> <span class="n">item_name</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        指定された論点における，itemのindexを返す．</span>
+
+<span class="sd">        :param int issue_number: 調べたい論点のindex</span>
+<span class="sd">        :param str item_name: indexを知りたいitem</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        :return: 指定された論点における，itemのindex</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__name2index_list</span><span class="p">[</span><span class="n">issue_number</span><span class="p">][</span><span class="n">item_name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_name"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_name">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_number</span><span class="p">,</span> <span class="n">item_index</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        指定された論点におけるindexのitemを返す.</span>
+
+<span class="sd">        :param int issue_number: 調べたい論点のindex</span>
+<span class="sd">        :param int item_index: itemを知りたいindex</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :return: 指定された論点における，indexのitem</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__index2name_list</span><span class="p">[</span><span class="n">issue_number</span><span class="p">][</span><span class="n">item_index</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_reservation_value"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_reservation_value">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_reservation_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        留保価格を返す．</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: 留保価格</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reservation_value</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_discount_reservation_value"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_discount_reservation_value">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_discount_reservation_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        割引効用込みの留保価格を返す．</span>
+
+<span class="sd">        :param float time: 交渉の正規化された経過時間</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: 割引済みの留保価格</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reservation_value</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__discout_factor</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_discount_factor"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_discount_factor">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_discount_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        割引効用を返す</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: 割引効用</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__discout_factor</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_weight_np_list"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_weight_np_list">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_weight_np_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        効用値を返す</span>
+
+<span class="sd">        :rtype: np.array</span>
+<span class="sd">        :return: 効用値</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__evaluations_np_list</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_issue_size_list"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_issue_size_list">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_issue_size_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        各論点の大きさのリストを返す</span>
+
+<span class="sd">        :rtype: List[int]</span>
+<span class="sd">        :return: 各論点の大きさのリスト</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_utility"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_utility">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid_</span><span class="p">:</span> <span class="n">bid</span><span class="o">.</span><span class="n">Bid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        効用値を返す</span>
+
+<span class="sd">        :param Bid bid_: 効用値を計算するbid</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: 効用値</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bid_</span><span class="o">.</span><span class="n">get_indexes</span><span class="p">()):</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__evaluations_np_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_bid_above_concession_value"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_bid_above_concession_value">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_bid_above_concession_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">concession_value</span><span class="p">,</span> <span class="n">make_num</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        乱数によりBid生成する</span>
+
+<span class="sd">        :rtype: Bid</span>
+<span class="sd">        :return: 乱数により生成されたBid</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># cython_code.</span>
+        <span class="n">random_number_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span><span class="p">:</span>
+            <span class="n">random_number_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">make_num</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">bid_index_list</span> <span class="o">=</span> <span class="n">make_bid</span><span class="o">.</span><span class="n">get_bid_above_concession_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__evaluations_np_list</span><span class="p">,</span> <span class="n">random_number_list</span><span class="p">,</span> <span class="n">concession_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">bid</span><span class="o">.</span><span class="n">Bid</span><span class="p">(</span><span class="n">bid_index_list</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_utility_discounted"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_utility_discounted">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_utility_discounted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid_</span><span class="p">:</span> <span class="n">bid</span><span class="o">.</span><span class="n">Bid</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        割引済みの効用値を返す</span>
+
+<span class="sd">        :param Bid bid_: 効用値を計算したいBid</span>
+<span class="sd">        :param float time: 正規化された交渉の経過時間</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: 割引済みの効用値</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid_</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">*=</span> <span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__discout_factor</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.get_bid_by_random_number"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.get_bid_by_random_number">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_bid_by_random_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bid</span><span class="o">.</span><span class="n">Bid</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        乱数によりBid生成する</span>
+
+<span class="sd">        :rtype: Bid</span>
+<span class="sd">        :return: 乱数により生成されたBid</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">bid_ret</span> <span class="o">=</span> <span class="n">bid</span><span class="o">.</span><span class="n">Bid</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span><span class="p">):</span>
+            <span class="n">bid_ret</span><span class="o">.</span><span class="n">set_issue_by_index</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">bid_ret</span></div>
+
+<div class="viewcode-block" id="UtilitySpace.is_valid_bid"><a class="viewcode-back" href="../utilitySpace.html#utilitySpace.UtilitySpace.is_valid_bid">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">is_valid_bid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid_</span><span class="p">:</span> <span class="n">bid</span><span class="o">.</span><span class="n">Bid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bidに正しい値が格納されているか調べる．</span>
+
+<span class="sd">        :param bid_ Bid: Bidが正しい値が格納されているか調べる．</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        :return: Bidに正しい値が格納されているかどうか</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bid_</span><span class="o">.</span><span class="n">get_indexes</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="n">index</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">__print_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;reservation_value:&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nb">str</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">__reservation_value</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;discount_factor:&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nb">str</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">__discout_factor</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;issue_size:&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nb">str</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">__issue_size_list</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;evaluation&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__evaluations_np_list</span><span class="p">)</span></div>
+
+
+<span class="c1"># if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">#     #utility_space = UtilitySpace(&#39;Domain2/Domain2_util1.xml&#39;)</span>
+<span class="c1">#     utility_space = UtilitySpace(&#39;Jobs/Jobs_util1.xml&#39;)</span>
+<span class="c1">#     utility_space.print_all()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >モジュールコード</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Tomoya Fukui.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5 で生成しました。
+    </div>
+  </body>
+</html>

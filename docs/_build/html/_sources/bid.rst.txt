@@ -1,0 +1,7 @@
+bid module
+==========
+
+.. automodule:: bid
+    :members:
+    :undoc-members:
+    :show-inheritance:

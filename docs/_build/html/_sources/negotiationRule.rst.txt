@@ -1,0 +1,7 @@
+negotiationRule module
+======================
+
+.. automodule:: negotiationRule
+    :members:
+    :undoc-members:
+    :show-inheritance:

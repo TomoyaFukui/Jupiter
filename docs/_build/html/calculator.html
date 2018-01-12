@@ -1,0 +1,250 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>calculator module &#8212; jupiter 1.0.0alpha ドキュメント</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="comunicateJavaAgent module" href="comunicateJavaAgent.html" />
+    <link rel="prev" title="bid module" href="bid.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="comunicateJavaAgent.html" title="comunicateJavaAgent module"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="bid.html" title="bid module"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-calculator">
+<span id="calculator-module"></span><h1>calculator module<a class="headerlink" href="#module-calculator" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<dl class="class">
+<dt id="calculator.Calculator">
+<em class="property">class </em><code class="descclassname">calculator.</code><code class="descname">Calculator</code><span class="sig-paren">(</span><em>issue_size_list: typing.List[int], weight_np_list: typing.List[&lt;built-in function array&gt;], discount_list: typing.List[float], reservation_value_list: typing.List[float]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calculator.html#Calculator"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#calculator.Calculator" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><ul class="first last simple">
+<li><strong>issue_size_list</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – 交渉ドメインの各論点の数のList</li>
+<li><strong>weight_np_list</strong> (<em>List</em><em>[</em><em>np.array</em><em>]</em>) – 各エージェントが持つ効用値のList</li>
+<li><strong>discount_list</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – 各エージェントが持つ割引効用のList</li>
+<li><strong>reservation_value_list</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – 各エージェントが持つ留保価格のList</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="calculator.Calculator.get_agreement_points">
+<code class="descname">get_agreement_points</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/calculator.html#Calculator.get_agreement_points"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#calculator.Calculator.get_agreement_points" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>合意案を返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body">[[int], [float]]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">合意案のインデックスのリスト，全プレイヤーのその効用値のリスト，のリスト</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="calculator.Calculator.get_parato_points">
+<code class="descname">get_parato_points</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/calculator.html#Calculator.get_parato_points"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#calculator.Calculator.get_parato_points" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>パレート点を返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body">[[int], [float]]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">パレート点のインデックスのリスト，全プレイヤーの効用値のリスト，のリスト</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="calculator.Calculator.get_utilities">
+<code class="descname">get_utilities</code><span class="sig-paren">(</span><em>index_list_list: [[[&lt;class 'int'&gt;], &lt;class 'float'&gt;]]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calculator.html#Calculator.get_utilities"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#calculator.Calculator.get_utilities" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="calculator.Calculator.get_utility">
+<code class="descname">get_utility</code><span class="sig-paren">(</span><em>index_list: [&lt;class 'int'&gt;], time=0.0, is_discounted=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calculator.html#Calculator.get_utility"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#calculator.Calculator.get_utility" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>全プレイヤーの効用値のリストを返す．</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><ul class="first simple">
+<li><strong>index_list</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – 計算したい提案のindexのリスト</li>
+<li><strong>time</strong> (<em>float</em>) – 提案が行われた時間</li>
+<li><strong>is_discounted</strong> (<em>bool</em>) – 割引効用を加味するかどうかのフラグ</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値の型:</th><td class="field-body"><p class="first">List[float]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">戻り値:</th><td class="field-body"><p class="first last">全プレイヤーの効用値のリスト</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="calculator.Calculator.get_discount_reservation_value_list">
+<code class="descname">get_discount_reservation_value_list</code><span class="sig-paren">(</span><em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/calculator.html#Calculator.get_discount_reservation_value_list"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#calculator.Calculator.get_discount_reservation_value_list" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>割引された留保価格のリストを返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>float</strong> (<em>time</em>) – 提案が行われた時間</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値の型:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">戻り値:</th><td class="field-body">割引された留保価格のリスト</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="calculator.Calculator.get_parato_distance">
+<code class="descname">get_parato_distance</code><span class="sig-paren">(</span><em>index_list: typing.List[int], time: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/calculator.html#Calculator.get_parato_distance"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#calculator.Calculator.get_parato_distance" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>パレート距離を計算する</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><ul class="first simple">
+<li><strong>index_list</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – 計算したい提案のindexのリスト</li>
+<li><strong>float</strong> (<em>time</em>) – 提案が行われた時間</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値の型:</th><td class="field-body"><p class="first">float</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">戻り値:</th><td class="field-body"><p class="first last">パレート距離</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="calculator.Calculator.get_nash_distance">
+<code class="descname">get_nash_distance</code><span class="sig-paren">(</span><em>index_list: typing.List[int]</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/calculator.html#Calculator.get_nash_distance"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#calculator.Calculator.get_nash_distance" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ナッシュ距離を計算する</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>index_list</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – 計算したい提案のindexのリスト</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値の型:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">戻り値:</th><td class="field-body">ナッシュ距離</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="bid.html"
+                        title="前の章へ">bid module</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="comunicateJavaAgent.html"
+                        title="次の章へ">comunicateJavaAgent module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="comunicateJavaAgent.html" title="comunicateJavaAgent module"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="bid.html" title="bid module"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Tomoya Fukui.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5 で生成しました。
+    </div>
+  </body>
+</html>

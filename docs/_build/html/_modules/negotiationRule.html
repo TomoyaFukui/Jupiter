@@ -1,0 +1,248 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>negotiationRule &#8212; jupiter 1.0.0alpha ドキュメント</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">モジュールコード</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>negotiationRule のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/agents&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">unique</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<div class="viewcode-block" id="TypeOfNegotiation"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.TypeOfNegotiation">[ドキュメント]</a><span class="nd">@unique</span>
+<span class="k">class</span> <span class="nc">TypeOfNegotiation</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    列挙型</span>
+<span class="sd">    自動交渉のtypeを表す</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">Turn</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Time</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+<div class="viewcode-block" id="NegotiationRule"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRule">[ドキュメント]</a><span class="k">class</span> <span class="nc">NegotiationRule</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    自動交渉を行う際のルール</span>
+<span class="sd">    各ルールはこのクラスを継承すること</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_max_ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__start_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__proceed_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="NegotiationRule.get_type"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRule.get_type">[ドキュメント]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        自動交渉のタイプを返す</span>
+
+<span class="sd">        :rtype: TypeOfNegotiation</span>
+<span class="sd">        :return: 自動交渉のタイプ</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__type</span></div>
+
+<div class="viewcode-block" id="NegotiationRule.get_time_now"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRule.get_time_now">[ドキュメント]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_time_now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        交渉中における，正規化された現在の時刻を返す</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: 正規化された現在の時刻</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span></div></div>
+
+
+<div class="viewcode-block" id="NegotiationRuleTurn"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRuleTurn">[ドキュメント]</a><span class="k">class</span> <span class="nc">NegotiationRuleTurn</span><span class="p">(</span><span class="n">NegotiationRule</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    自動交渉を行う際のルールの1つ</span>
+<span class="sd">    ターン制</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_max_turn</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        turn制のとき用いる自動交渉のルール</span>
+
+<span class="sd">        :param int time_max_turn: 最大ターン数</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__type</span> <span class="o">=</span> <span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Turn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span> <span class="o">=</span> <span class="n">time_max_turn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__start_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">__proceed_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+             <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="NegotiationRuleTurn.get_time_max"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRuleTurn.get_time_max">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_time_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        その交渉における最大ターン数を返す</span>
+
+<span class="sd">        :rtype: int</span>
+<span class="sd">        :return: その交渉における最大ターン数</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span></div>
+
+<div class="viewcode-block" id="NegotiationRuleTurn.get_time_now"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRuleTurn.get_time_now">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_time_now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        交渉中における，正規化された現在の時刻を返す</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: 正規化された現在の時刻</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span></div>
+
+<div class="viewcode-block" id="NegotiationRuleTurn.get_type"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRuleTurn.get_type">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        自動交渉のタイプを返す．</span>
+
+<span class="sd">        :rtype: TypeOfNegotiation.Turn</span>
+<span class="sd">        :return: 自動交渉のタイプ</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__type</span></div></div>
+
+<div class="viewcode-block" id="NegotiationRuleTime"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRuleTime">[ドキュメント]</a><span class="k">class</span> <span class="nc">NegotiationRuleTime</span><span class="p">(</span><span class="n">NegotiationRule</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    自動交渉を行う際のルールの1つ</span>
+<span class="sd">    時間制</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_max_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        time制のとき用いる自動交渉のルール</span>
+
+<span class="sd">        :param float time_max_s: 最大の交渉時間．単位は秒．</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__type</span> <span class="o">=</span> <span class="n">TypeOfNegotiation</span><span class="o">.</span><span class="n">Time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span> <span class="o">=</span> <span class="n">time_max_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">__start_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__time_begining</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__proceed_negotiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">__time_begining</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+             <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="NegotiationRuleTime.get_time_max"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRuleTime.get_time_max">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_time_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        その交渉における最大の時間を返す</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: その交渉における最大の交渉時間．単位は秒</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span></div>
+
+<div class="viewcode-block" id="NegotiationRuleTime.get_time_now"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRuleTime.get_time_now">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_time_now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        交渉中における，正規化された現在の時刻を返す</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        :return: 正規化された現在の時刻</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">__time_begining</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__time_now</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_time</span></div>
+        <span class="c1">#return self.__time_now</span>
+
+<div class="viewcode-block" id="NegotiationRuleTime.get_type"><a class="viewcode-back" href="../negotiationRule.html#negotiationRule.NegotiationRuleTime.get_type">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        自動交渉のタイプを返す．</span>
+
+<span class="sd">        :rtype: TypeOfNegotiation.Time</span>
+<span class="sd">        :return: 自動交渉のタイプ</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__type</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >モジュールコード</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Tomoya Fukui.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5 で生成しました。
+    </div>
+  </body>
+</html>

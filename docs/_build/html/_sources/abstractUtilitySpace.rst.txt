@@ -1,0 +1,7 @@
+abstractUtilitySpace module
+===========================
+
+.. automodule:: abstractUtilitySpace
+    :members:
+    :undoc-members:
+    :show-inheritance:

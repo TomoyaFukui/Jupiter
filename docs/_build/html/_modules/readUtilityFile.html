@@ -1,0 +1,191 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>readUtilityFile &#8212; jupiter 1.0.0alpha ドキュメント</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">モジュールコード</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>readUtilityFile のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="ReadXML"><a class="viewcode-back" href="../readUtilityFile.html#readUtilityFile.ReadXML">[ドキュメント]</a><span class="k">class</span> <span class="nc">ReadXML</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Geniusで作成された効用ドメインファイルを読み込む</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__size</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1">#tag_name属性の子要素までをdictionaryで追加する</span>
+    <span class="c1">#{tag_name + index:{child&#39;s neme + index :value_name}}</span>
+    <span class="k">def</span> <span class="nf">__set_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">,</span> <span class="n">value_name</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">tag_name</span><span class="p">:</span>
+                <span class="n">records_value_name</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">records_value</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
+                    <span class="n">records_value_name</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value_name</span><span class="p">)</span>
+                    <span class="n">records_value</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">),</span>
+                                            <span class="n">tag_name</span><span class="p">:</span><span class="n">records_value_name</span><span class="p">,</span>
+                                            <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
+                                            <span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">):</span><span class="n">records_value</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__set_dictionary</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">,</span> <span class="n">value_name</span><span class="p">)</span>
+
+    <span class="c1">#tag_name属性の要素をdictionaryで追加する</span>
+    <span class="c1">#{tag_name + index:value}</span>
+    <span class="k">def</span> <span class="nf">__set_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+            <span class="c1">#tag_names = nodes.findall(tag_name)</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">tag_name</span><span class="p">):</span>
+                <span class="c1">#self.all_records.append(nodes.get(&quot;value&quot;))</span>
+                <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">tag_name</span><span class="p">:</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)})</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">),</span> <span class="n">tag_name</span><span class="p">:</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)})</span>
+            <span class="c1"># 処理の軽量化のためのif</span>
+            <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">tag</span> <span class="o">!=</span> <span class="s1">&#39;issue&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__set_element</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__count_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">tag_name</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__count_size</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__set_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__count_size</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="c1">#未実装</span>
+    <span class="c1">#weightやissueをindexの順番でソートする</span>
+    <span class="k">def</span> <span class="nf">__sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">weight_index_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">weight_index_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;index&quot;</span><span class="p">])</span>
+        <span class="n">sort_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c1">#print(sorted(self._all_records[3, sort_range],key=lambda x: (x[&quot;index&quot;])))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="n">sort_range</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">])))</span>
+        <span class="c1">#print(weight_index_list)</span>
+        <span class="c1">#for in self.all_records:</span>
+
+
+<div class="viewcode-block" id="ReadXML.create_utility"><a class="viewcode-back" href="../readUtilityFile.html#readUtilityFile.ReadXML.create_utility">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">create_utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        効用ドメインファイルを読み込んで，内容をリストで返す</span>
+
+<span class="sd">        :param str file_name: 読み込みたいファイルのパス</span>
+<span class="sd">        :rtype: List</span>
+<span class="sd">        :return: 読み込んだ情報のリスト</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cannnot serch for &#39;</span><span class="p">,</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_element</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;discount_factor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_element</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;reservation&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_size</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;issue&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_element</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_dictionary</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;issue&#39;</span><span class="p">,</span> <span class="s1">&#39;evaluation&#39;</span><span class="p">)</span>
+        <span class="c1">#print(self.__all_records)</span>
+        <span class="c1">#self._sort()</span>
+        <span class="c1">#return pd.DataFrame(read_domain.all_records)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span></div>
+
+    <span class="k">def</span> <span class="nf">__print_all_records</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__all_records</span><span class="p">)</span></div>
+
+<span class="c1"># if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">#     read_domain = ReadXML()</span>
+<span class="c1">#     #read_domain.create_utility(&#39;Domain2/Domain2_util1.xml&#39;)</span>
+<span class="c1">#     read_domain.create_utility(&#39;Jobs/Jobs_util1.xml&#39;)</span>
+<span class="c1">#     read_domain.__print_all_records()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >モジュールコード</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Tomoya Fukui.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5 で生成しました。
+    </div>
+  </body>
+</html>

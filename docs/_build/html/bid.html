@@ -1,0 +1,176 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bid module &#8212; jupiter 1.0.0alpha ドキュメント</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="calculator module" href="calculator.html" />
+    <link rel="prev" title="agentAction module" href="agentAction.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="calculator.html" title="calculator module"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="agentAction.html" title="agentAction module"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-bid">
+<span id="bid-module"></span><h1>bid module<a class="headerlink" href="#module-bid" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<dl class="class">
+<dt id="bid.Bid">
+<em class="property">class </em><code class="descclassname">bid.</code><code class="descname">Bid</code><span class="sig-paren">(</span><em>issue_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bid.html#Bid"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#bid.Bid" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>自動交渉エージェント間で交換されるBid
+Offer，Acceptクラスを作成する際に用いる</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><ul class="first last simple">
+<li><strong>issue_size1</strong> (<em>List</em>) – 提案したい内容のindexのリスト</li>
+<li><strong>issue_size2</strong> (<em>int</em>) – 交渉ドメインの各論点の数</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="bid.Bid.set_issue_by_list">
+<code class="descname">set_issue_by_list</code><span class="sig-paren">(</span><em>index_list: typing.List[int]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bid.html#Bid.set_issue_by_list"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#bid.Bid.set_issue_by_list" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>listオブジェクトにより提案Bidをsetする</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>issue_size</strong> (<em>list</em>) – 提案したい内容のindexのリスト</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bid.Bid.set_issue_by_index">
+<code class="descname">set_issue_by_index</code><span class="sig-paren">(</span><em>issue_index: int</em>, <em>item_index: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bid.html#Bid.set_issue_by_index"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#bid.Bid.set_issue_by_index" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>論点のindexを指定して，その論点に指定したindexをsetする</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><ul class="first last simple">
+<li><strong>issue_index</strong> (<em>int</em>) – setしたい論点のindex</li>
+<li><strong>item_index</strong> (<em>int</em>) – setしたいitemのindex</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bid.Bid.get_indexes">
+<code class="descname">get_indexes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bid.html#Bid.get_indexes"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#bid.Bid.get_indexes" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>行動を起こした時間を返す</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">行動を起こした時間</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="agentAction.html"
+                        title="前の章へ">agentAction module</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="calculator.html"
+                        title="次の章へ">calculator module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Pythonモジュール索引"
+             >モジュール</a> |</li>
+        <li class="right" >
+          <a href="calculator.html" title="calculator module"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="agentAction.html" title="agentAction module"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jupiter 1.0.0alpha ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Tomoya Fukui.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5 で生成しました。
+    </div>
+  </body>
+</html>

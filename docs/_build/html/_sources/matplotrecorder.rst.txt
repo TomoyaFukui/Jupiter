@@ -1,0 +1,7 @@
+matplotrecorder module
+======================
+
+.. automodule:: matplotrecorder
+    :members:
+    :undoc-members:
+    :show-inheritance:
