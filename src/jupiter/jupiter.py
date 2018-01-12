@@ -25,7 +25,7 @@ class Jupiter:
     '''
     def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
         """
-        :param TypeOfNegotiation negotiation_type:　交渉のタイプ
+        :param TypeOfNegotiation negotiation_type: 交渉のタイプ
         :param int negotiation_time: 交渉の最大時間
         :param str setting_file_name: 交渉ドメインの設定ファイル
         :param List[str] file_names: 交渉ドメインファイルのリスト
@@ -330,7 +330,7 @@ def display_log(file_name, number_of_repeating):
             action = agentAction.EndNegotiation(action_dict["id"])
         return action
 
-    f = open(file_name , 'r')
+    f = open(file_name, 'r')
     history_dictionary = json.load(f)
     jupiter = set_jupiter(history_dictionary)
 
