@@ -1,17 +1,12 @@
-# coding: utf-8
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
-from typing import List
-import utilitySpace
-import bid
+from . import utilitySpace
+from . import bid
 
 
 class SummrizationOfUtilitySpace:
     '''
     utilitySpaceを統括する
     '''
-    def __init__(self, file_name_list: List[str]):
+    def __init__(self, file_name_list: [str]):
         '''
         :param List[str] file_name_list: 自動交渉に用いるファイルのパスのリスト
         '''

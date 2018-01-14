@@ -1,12 +1,8 @@
-import random
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '..')
-import abstractAgent
-import agentAction
-import abstractUtilitySpace
-import negotiationRule
-import bid
+from ..jupiter import abstractAgent
+from ..jupiter import agentAction
+from ..jupiter import abstractUtilitySpace
+from ..jupiter import negotiationRule
+
 
 class ConcederAgent(abstractAgent.AbstractAgent):
     def __init__(self, utility_space: abstractUtilitySpace.AbstractUtilitySpace,
@@ -25,7 +21,7 @@ class ConcederAgent(abstractAgent.AbstractAgent):
 
     def send_action(self):
         if self.__opponent_bid is not None and \
-            self.get_conssetion_value() < self.__utility_space.get_utility(self.__opponent_bid):
+           self.get_conssetion_value() < self.__utility_space.get_utility(self.__opponent_bid):
             return agentAction.Accept(self.__agent_id)
 
         bid_offer = self.__utility_space.get_bid_above_concession_value(self.get_conssetion_value())

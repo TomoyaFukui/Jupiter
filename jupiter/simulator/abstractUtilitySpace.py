@@ -1,20 +1,17 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from abc import ABCMeta, abstractmethod
-import enum
-from bid import Bid
+from .bid import Bid
+
 
 class AbstractUtilitySpace(metaclass=ABCMeta):
     """
     効用情報の抽象クラス
+
     効用情報のクラスはこのクラスを継承すること
     """
+
     @abstractmethod
     def __init__(self, file_name):
-        """
-        :param str file_name: 交渉ドメインファイルのパス
-        """
+        """:param str file_name: 交渉ドメインファイルのパス"""
         pass
 
     @abstractmethod
@@ -64,7 +61,7 @@ class AbstractUtilitySpace(metaclass=ABCMeta):
     def get_file_name(self) -> str:
         """
         交渉ドメインファイルのパスを返す
-        
+
         :rtype: str
         :return: 交渉ドメインファイルのパス
         """

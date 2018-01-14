@@ -1,11 +1,8 @@
-# coding: utf-8
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from abc import ABCMeta, abstractmethod
-import abstractUtilitySpace
-import negotiationRule
-import agentAction
+from . import abstractUtilitySpace
+from . import negotiationRule
+from . import agentAction
+
 
 # 抽象クラス
 class AbstractAgent(metaclass=ABCMeta):
@@ -33,6 +30,7 @@ class AbstractAgent(metaclass=ABCMeta):
         :param AbstractAction agent_action: 他のエージェントが起こした行動
         """
         pass
+
     @abstractmethod
     def send_action(self) -> agentAction.AbstractAction:
         """
@@ -42,6 +40,7 @@ class AbstractAgent(metaclass=ABCMeta):
         :return: Accept,Offer,EndNegotiationのいずれかを返す
         """
         pass
+
     @abstractmethod
     def get_name(self) -> str:
         """

@@ -1,10 +1,7 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '..')
-import abstractAgent
-import agentAction
-import abstractUtilitySpace
-import negotiationRule
+from ..jupiter import abstractAgent
+from ..jupiter import agentAction
+from ..jupiter import abstractUtilitySpace
+from ..jupiter import negotiationRule
 
 class LinearAgent(abstractAgent.AbstractAgent):
     def __init__(self, utility_space: abstractUtilitySpace.AbstractUtilitySpace,

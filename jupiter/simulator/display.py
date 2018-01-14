@@ -1,17 +1,9 @@
-# coding: utf-8
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
-import numpy as np
-from typing import List
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import copy
-import time
-import calculator
-import agentAction
-import bid
-import matplotrecorder
+# from mpl_toolkits.mplot3d import Axes3D
+from . import calculator
+from . import agentAction
+from . import matplotrecorder
+
 
 class Display:
     '''

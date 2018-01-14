@@ -5,3 +5,8 @@ src/__pycache__/
 src/agents/__pycache__/
 src/movies/
 src/pictures/
+build/
+dist/
+jupiter.egg-info/
+jupiter/other/
+jupiter/pictures/

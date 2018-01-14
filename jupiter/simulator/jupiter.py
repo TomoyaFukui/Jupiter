@@ -1,29 +1,26 @@
-# coding: utf-8
 import json
-import copy
-import time
 import datetime
-import sys
+from . import summrizationOfUtilitySpace
+from . import negotiationRule
+from . import display
+from . import agentAction
+from . import comunicateJavaAgent
+from ..agents.linearAgent import LinearAgent
+from ..agents.concederAgent import ConcederAgent
+# from ..agents.boulwareAgent import BoulwareAgent
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../agents')
 ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/../"
-from typing import List
-import summrizationOfUtilitySpace
-import negotiationRule
-import display
-import agentAction
-import comunicateJavaAgent
-from linearAgent import*
-from boulwareAgent import*
-from concederAgent import*
+
 
 class Jupiter:
-    '''
+    """
     自動交渉を行うクラス
+
     また，全体の管理を行う．
-    '''
-    def __init__(self, negotiation_type, negotiation_time: int, setting_file_name, *file_names):
+    """
+
+    def __init__(self, negotiation_type, negotiation_time: int,
+                 setting_file_name, *file_names):
         """
         :param TypeOfNegotiation negotiation_type: 交渉のタイプ
         :param int negotiation_time: 交渉の最大時間
@@ -180,9 +177,9 @@ class Jupiter:
 
     def __is_valid_action(self, action: agentAction.AbstractAction, action_len: int) -> bool:
         if isinstance(action, agentAction.Accept) and action_len == 0:
-            raise ValueError('first accept error in agent_id:',action.get_agent_id())
+            raise ValueError('first accept error in agent_id:', action.get_agent_id())
         elif isinstance(action, agentAction.Offer) and not self.__utilities.is_valid_bid(action.get_bid()):
-            raise ValueError('bid index error in agent_id:',action.get_agent_id())
+            raise ValueError('bid index error in agent_id:', action.get_agent_id())
         return True
 
     def __is_finished_negotiation(self, action: agentAction.AbstractAction) -> bool:
@@ -271,7 +268,7 @@ class Jupiter:
             for j, action in enumerate(action_list, start=1):
                 history_dictionary[i][j] = action_to_dict(action)
 
-        #print(history_dictionary)
+        # print(history_dictionary)
         time_now = datetime.datetime.now().strftime('%Y%m%d-%H:%M:%S')
         print("save in " + ABSPATH + 'log/bids' + time_now + ".json")
         f = open(ABSPATH + 'log/bids' + time_now + ".json", 'w')
@@ -286,16 +283,15 @@ class Jupiter:
         :return: 自動交渉に参加するエージェントの数
         """
         return len(self.__agent_list)
-    # def get_utility(self, index, bid_, time_):
-    #     return self.__utilities.get_utility_space(index).get_utility_discounted(bid_, time_)
+
 
 def display_log(file_name, number_of_repeating):
-    '''
+    """
     指定した提案応答履歴から，指定したindexの提案応答ゲームを再生する．
 
     :param str file_name: 再生したい提案応答ゲームの履歴のパス
     :param int number_of_repeating: 再生したい提案応答ゲームのindex
-    '''
+    """
     def set_jupiter(history_dictionary):
         if history_dictionary['rule']['type'] == 'turn':
             negotiation_type = negotiationRule.TypeOfNegotiation.Turn
@@ -309,11 +305,15 @@ def display_log(file_name, number_of_repeating):
         # file2 = history_dictionary["agents"]["1"]["file_name"]
         # file3 = history_dictionary["agents"]["2"]["file_name"]
         if history_dictionary["agents"]["size"] == 2:
-            jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file_list[0], file_list[1])
+            jupiter = Jupiter(negotiation_type, negotiation_time,
+                              setting_file_name, file_list[0], file_list[1])
         elif history_dictionary["agents"]["size"] == 3:
-            jupiter = Jupiter(negotiation_type, negotiation_time, setting_file_name, file_list[0], file_list[1], file_list[2])
+            jupiter = Jupiter(negotiation_type, negotiation_time,
+                              setting_file_name,
+                              file_list[0], file_list[1], file_list[2])
         for i in range(0, history_dictionary["agents"]["size"]):
-            jupiter.set_name(history_dictionary["agents"][str(i)]["agent_name"])
+            jupiter.set_name(history_dictionary["agents"]
+                             [str(i)]["agent_name"])
         # jupiter.set_agent(history_dictionary["agents"]["1"]["agent_name"])
         # jupiter.set_agent(history_dictionary["agents"]["2"]["agent_name"])
         return jupiter
@@ -352,17 +352,28 @@ def display_log(file_name, number_of_repeating):
         print(history_dictionary["agents"][str(i)]["agent_name"], ":", jupiter.get_utility(i, action_list[-1].get_bid(), action_list[-1].get_time_offered()))
     jupiter.display.show()
 
-
-if __name__ == '__main__':
-    pass
+def test(is_printed=False):
     jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
         'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
     jupiter.set_agent('LinearAgent')
-    # jupiter.set_agent('LinearAgent')
     jupiter.set_agent('ConcederAgent')
+    #jupiter.set_notebook_flag()
+    jupiter.do_negotiation(is_printing=True, print_times=1)
+    if is_printed:
+        jupiter.display.show()
+    return 0
+
+if __name__ == '__main__':
+    test()
+    # pass
+    # jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
+        # 'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
+    # jupiter.set_agent('LinearAgent')
+    # jupiter.set_agent('LinearAgent')
+    # jupiter.set_agent('ConcederAgent')
     # jupiter.set_agent('BoulwareAgent')
     # jupiter.set_java_agent(25535)
 
     #jupiter.set_notebook_flag()
-    jupiter.do_negotiation(is_printing=True, print_times=1)
-    jupiter.display.show()
+    # jupiter.do_negotiation(is_printing=True, print_times=1)
+    # jupiter.display.show()

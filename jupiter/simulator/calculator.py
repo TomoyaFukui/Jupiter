@@ -1,11 +1,7 @@
-# coding: utf-8
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from typing import List
 import numpy as np
 import copy
-import bid
+from . import bid
 
 #パレート距離やナッシュ距離を計算する
 # JupiterからGUIクラスを通じてこのクラスを使う

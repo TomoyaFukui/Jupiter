@@ -1,12 +1,6 @@
-# coding: utf-8
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
 from abc import ABCMeta, abstractmethod
-from enum import Enum, unique
-import time
-import copy
-import bid
+from . import bid
+
 
 class AbstractAction(metaclass=ABCMeta):
     """
@@ -37,6 +31,7 @@ class AbstractAction(metaclass=ABCMeta):
         :return: 行動を起こした時間
         """
         return self.__time_offered
+
 
 class Accept(AbstractAction):
     """
@@ -75,6 +70,7 @@ class Accept(AbstractAction):
         """
         return self.__bid
 
+
 class Offer(AbstractAction):
     """
     エージェントが起こすことのできる行動の1つ
@@ -104,6 +100,7 @@ class Offer(AbstractAction):
         :return: エージェントの提案
         """
         return self.__bid
+
 
 class EndNegotiation(AbstractAction):
     """

@@ -1,16 +1,13 @@
-import random
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '..')
-import abstractAgent
-import agentAction
-import abstractUtilitySpace
-import negotiationRule
-import bid
+from ..jupiter import abstractAgent
+from ..jupiter import agentAction
+from ..jupiter import abstractUtilitySpace
+from ..jupiter import negotiationRule
+
 
 class BoulwareAgent(abstractAgent.AbstractAgent):
     def __init__(self, utility_space: abstractUtilitySpace.AbstractUtilitySpace,
-                    negotiation_rule: negotiationRule.NegotiationRule, agent_id: int, agent_num:int):
+                 negotiation_rule: negotiationRule.NegotiationRule,
+                 agent_id: int, agent_num: int):
         self.__utility_space = utility_space
         self.__rule = negotiation_rule
         self.__agent_id = agent_id
@@ -25,7 +22,7 @@ class BoulwareAgent(abstractAgent.AbstractAgent):
 
     def send_action(self):
         if self.__opponent_bid is not None and \
-            self.get_conssetion_value() < self.__utility_space.get_utility(self.__opponent_bid):
+           self.get_conssetion_value() < self.__utility_space.get_utility(self.__opponent_bid):
             return agentAction.Accept(self.__agent_id)
 
         bid_offer = self.__utility_space.get_bid_above_concession_value(self.get_conssetion_value())
@@ -33,6 +30,9 @@ class BoulwareAgent(abstractAgent.AbstractAgent):
 
     def receive_start_negotiation(self):
         self.__opponent_bid = None
+
+    def receive_end_negotiation(self):
+        pass
 
     def get_name(self):
         return 'BoulwareAgent'

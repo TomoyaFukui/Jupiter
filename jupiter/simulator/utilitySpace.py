@@ -1,17 +1,15 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/agents')
+# import sys
+# import os
 import numpy as np
 import random
 import copy
-import abstractUtilitySpace
-import readUtilityFile
-import bid
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/cython')
-import make_bid
+from . import abstractUtilitySpace
+from . import readUtilityFile
+from . import bid
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/cython')
+from .cython import make_bid
 import numpy.random as rand
+
 
 class UtilitySpace(abstractUtilitySpace.AbstractUtilitySpace):
     """
