@@ -2,6 +2,8 @@ from typing import List
 import numpy as np
 import copy
 from . import bid
+# import bid
+
 
 #パレート距離やナッシュ距離を計算する
 # JupiterからGUIクラスを通じてこのクラスを使う

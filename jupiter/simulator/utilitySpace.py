@@ -1,14 +1,18 @@
 # import sys
 # import os
 import numpy as np
+import numpy.random as rand
 import random
 import copy
 from . import abstractUtilitySpace
 from . import readUtilityFile
 from . import bid
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/cython')
 from .cython import make_bid
-import numpy.random as rand
+# import abstractUtilitySpace
+# import readUtilityFile
+# import bid
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/cython')
+# from cython import make_bid
 
 
 class UtilitySpace(abstractUtilitySpace.AbstractUtilitySpace):
@@ -28,7 +32,6 @@ class UtilitySpace(abstractUtilitySpace.AbstractUtilitySpace):
         all_records = readUtilityFile.ReadXML().create_utility(file_name)
         self.__discout_factor = (float)(all_records[0]['discount_factor'])
         self.__reservation_value = (float)(all_records[1]['reservation'])
-
         issue_size = all_records[2]
 
         self.__name2index_list = []

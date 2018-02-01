@@ -1,12 +1,16 @@
 import sys
 import traceback
 from .cli import parser
-from .jupiter.jupiter import Jupiter
-from .jupiter.jupiter import test
+from .simulator import Jupiter
+from .simulator import test
+
+
+def execute(args):
+    print(args)
+    pass
 
 
 def main(argv=sys.argv):
-
     if len(argv) < 2:
         parser.parse_args(["-h"])
         sys.exit(0)
@@ -15,8 +19,7 @@ def main(argv=sys.argv):
     args = parser.parse_args()
 
     try:
-        # exit_code = program(args)
-        exit_code = test()
+        exit_code = test(True)
         sys.exit(exit_code)
 
     except Exception as e:

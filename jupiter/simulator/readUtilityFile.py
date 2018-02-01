@@ -80,11 +80,16 @@ class ReadXML():
         try:
             tree = ET.parse(file_name)
         except:
-            print('cannnot serch for ',file_name)
+            print('cannnot serch for ', file_name)
             return
         root = tree.getroot()
         self.__set_element(root, 'discount_factor')
+        if len(self.__all_records) == 0:
+            self.__all_records.append({"discount_factor": 1})
+        # print(len(self.__all_records))
         self.__set_element(root, 'reservation')
+        if len(self.__all_records) == 1:
+            self.__all_records.append({"reservation": 0})
         self.__set_size(root, 'issue')
         self.__set_element(root, 'weight')
         self.__set_dictionary(root, 'issue', 'evaluation')

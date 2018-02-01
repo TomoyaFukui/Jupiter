@@ -1,7 +1,7 @@
-from ..jupiter import abstractAgent
-from ..jupiter import agentAction
-from ..jupiter import abstractUtilitySpace
-from ..jupiter import negotiationRule
+from jupiter.simulator import abstractAgent
+from jupiter.simulator import agentAction
+from jupiter.simulator import abstractUtilitySpace
+from jupiter.simulator import negotiationRule
 
 class LinearAgent(abstractAgent.AbstractAgent):
     def __init__(self, utility_space: abstractUtilitySpace.AbstractUtilitySpace,
@@ -28,6 +28,9 @@ class LinearAgent(abstractAgent.AbstractAgent):
 
     def receive_start_negotiation(self):
         self.__opponent_bid = None
+
+    def receive_end_negotiation(self):
+        pass
 
     def get_name(self):
         return 'LinearAgent'

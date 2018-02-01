@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from .bid import Bid
+# from bid import Bid
 
 
 class AbstractUtilitySpace(metaclass=ABCMeta):

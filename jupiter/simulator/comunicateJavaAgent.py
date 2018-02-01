@@ -4,6 +4,12 @@ from . import agentAction
 from . import abstractUtilitySpace
 from . import negotiationRule
 from . import bid
+# import abstractAgent
+# import agentAction
+# import abstractUtilitySpace
+# import negotiationRule
+# import bid
+
 
 class JavaAgent(abstractAgent.AbstractAgent):
     """

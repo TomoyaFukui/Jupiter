@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 import os
 import glob
+import site
 
 from setuptools import setup, find_packages
 # from distutils.extension import Extension
@@ -24,35 +25,40 @@ def _requires_from_file(filename):
 
 extensions = [
     Extension(
-        "src.jupiter.cython.make_bid",
-        ["src/jupiter/cython/make_bid.pyx"],
+        "jupiter.simulator.cython.make_bid",
+        ["jupiter/simulator/cython/make_bid.pyx"],
         include_dirs=[np.get_include()],
     ),
 ]
 
 # version
-here = os.path.dirname(os.path.abspath(__file__)) + '/src'
-
+here = os.path.dirname(os.path.abspath(__file__)) + '/jupiter'
 version = next((line.split('=')[1].strip().replace("'", '')
                 for line in open(os.path.join(here,
-                                              'Jupiter',
+                                              'simulator',
                                               '__init__.py'))
                 if line.startswith('__version__ = ')),
-               '0.0.dev0')
+               '0.0.dev4')
 
 # data_files
-here = os.path.dirname(os.path.abspath(__file__)) + '/src'
+# site-packageディレクトリのパスを取得
+# ※リストの先頭に"C:\Python34"が入ってるみたいなので最後がsite-packageだと想定して処理します（確実ではなさそうなのでいい方法があったら教えてください）
+site_dir = os.path.join(site.getsitepackages()[-1], "jupiter-negotiation")
 domain_dir = os.path.join(here, 'domain')
 datafiles = []
 for filename in glob.glob(os.path.join(domain_dir, '*')):
     if os.path.isdir(filename):
-        datafiles.append((filename[len(domain_dir) - 10:],
+        # datafiles.append((site_dir,
+        #                   glob.glob(os.path.join(filename, '*.xml'))))
+        datafiles.append((os.path.join(site_dir, filename[len(domain_dir) - 6:]),
                           glob.glob(os.path.join(filename, '*.xml'))))
 # datafiles = glob.glob(os.path.join(domain_dir, '**/*.xml'))
+# sourcefiles = ['jupiter/simulator/cython/make_bid.pyx']
+print(datafiles)
 
-sourcefiles = ['src/jupiter/cython/make_bid.pyx']
+
 setup(
-    name="jupiter",
+    name="jupiter-negotiation",
     version=version,
     url='https://github.com/TomoyaFukui/Jupiter',
     author='TomoyaFukui',
@@ -64,6 +70,7 @@ setup(
     packages=find_packages(),
     ext_modules=cythonize(extensions),
     data_files=datafiles,
+    # package_data=datafiles,
     install_requires=_requires_from_file('requirements.txt'),
     license="MIT",
     keywords="negotiation, jupiter",
@@ -77,7 +84,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "jupiter=src.__main__:main"
+            "jupiter=jupiter.__main__:main"
         ]
     },
 )

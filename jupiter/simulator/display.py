@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from . import calculator
 from . import agentAction
 from . import matplotrecorder
+# import calculator
+# import agentAction
+# import matplotrecorder
 
 
 class Display:
@@ -187,6 +190,59 @@ class Display:
         if self.__is_saved:
             matplotrecorder.save_frame()
             matplotrecorder.save_movie("movies/animation.gif", 0.1)
+
+    def plot2_notebook(self, action_list, get_agreement):
+        for i in range(self.__agent_num):
+            bid_list = [[x.get_bid().get_indexes(), x.get_time_offered()] for x in action_list
+                            if (isinstance(x, agentAction.Offer) or isinstance(x, agentAction.Accept))
+                            and x.get_agent_id() == i]
+            value_list = self.__calculate.get_utilities(bid_list)
+            x = [i[0] for i in value_list]
+            y = [i[1] for i in value_list]
+            if i == 0:
+                self.__line2.set_data(x, y)
+            elif i == 1:
+                self.__line3.set_data(x, y)
+        if get_agreement[0] == True and isinstance(get_agreement[1], agentAction.EndNegotiation):
+            agreement = self.__calculate.get_discount_reservation_value_list(get_agreement[1].get_time_offered())
+            self.__line4.set_data(agreement[0], agreement[1])
+        elif get_agreement[0] == True:
+            agreement = get_agreement[1].get_bid().get_indexes()
+            agreement = self.__calculate.get_utility(agreement, get_agreement[1].get_time_offered())
+            self.__line4.set_data(agreement[0], agreement[1])
+
+        self.__ax.legend(loc='upper right')
+        plt.show()
+
+    def plot3_notebook(self, action_list, get_agreement):
+        self.__ax_list[3].legend(loc='upper right')
+        for i in range(self.__agent_num):
+            bid_list = [[x.get_bid().get_indexes(), x.get_time_offered()] for x in action_list
+                            if (isinstance(x, agentAction.Offer) or isinstance(x, agentAction.Accept))
+                            and x.get_agent_id() == i]
+            value_list = self.__calculate.get_utilities(bid_list)
+            util_list = [[i[0] for i in value_list], [i[1] for i in value_list], [i[2] for i in value_list]]
+
+            for j, lines in enumerate(self.__line_list):
+                if j == 3:
+                    continue
+                lines[i+2].set_data(util_list[j%3], util_list[(j+1)%3])
+        if get_agreement[0] == True and isinstance(get_agreement[1], agentAction.EndNegotiation):
+            agreement = self.__calculate.get_discount_reservation_value_list(get_agreement[1].get_time_offered())
+            for i, lines in enumerate(self.__line_list):
+                if i == 3:
+                    continue
+                lines[5].set_data(agreement[i%3], agreement[(i+1)%3])
+        elif get_agreement[0] == True:
+            agreement = get_agreement[1].get_bid().get_indexes()
+            agreement = self.__calculate.get_utility(agreement, get_agreement[1].get_time_offered())
+            for i, lines in enumerate(self.__line_list):
+                if i == 3:
+                    continue
+                lines[5].set_data(agreement[i%3], agreement[(i+1)%3])
+        plt.show()
+
+
 
     def show(self):
         '''

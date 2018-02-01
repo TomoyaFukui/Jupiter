@@ -2,6 +2,9 @@ from abc import ABCMeta, abstractmethod
 from . import abstractUtilitySpace
 from . import negotiationRule
 from . import agentAction
+# import abstractUtilitySpace
+# import negotiationRule
+# import agentAction
 
 
 # 抽象クラス

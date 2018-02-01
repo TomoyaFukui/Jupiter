@@ -1,7 +1,7 @@
-from ..jupiter import abstractAgent
-from ..jupiter import agentAction
-from ..jupiter import abstractUtilitySpace
-from ..jupiter import negotiationRule
+from jupiter.simulator import abstractAgent
+from jupiter.simulator import agentAction
+from jupiter.simulator import abstractUtilitySpace
+from jupiter.simulator import negotiationRule
 
 
 class BoulwareAgent(abstractAgent.AbstractAgent):
