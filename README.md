@@ -9,7 +9,7 @@ Jupiter is under development now.
 The feature is the following:
 - is developed in Python3
 - easy for agent developer to use machine learning library
-
+- is able to use agents developed in Genius.
 
 ## Important links
 - Homepage: under constructions
