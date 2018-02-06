@@ -181,7 +181,8 @@ class Calculator:
         :rtype: float
         :return: パレート距離
         '''
-        point_np = np.array(self.get_utility(index_list, time), dtype=np.float32)
+        if isinstance(index_list[0], int):
+            point_np = np.array(self.get_utility(index_list, time), dtype=np.float32)
         parato_points_np = np.array(self.parato_points_utility_value, dtype=np.float32)
         min_distance = 9999
         point = []
