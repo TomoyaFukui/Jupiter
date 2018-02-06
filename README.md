@@ -11,6 +11,7 @@ The feature is the following:
 - easy for agent developer to use machine learning library
 - is able to use agents developed in Genius.
 
+
 ## Important links
 - Homepage: under constructions
 - User Guide: https://github.com/TomoyaFukui/Jupiter/blob/master/userguide.pdf

@@ -38,7 +38,7 @@ version = next((line.split('=')[1].strip().replace("'", '')
                                               'simulator',
                                               '__init__.py'))
                 if line.startswith('__version__ = ')),
-               '0.0.dev4')
+               '0.0.dev5')
 
 # data_files
 # site-packageディレクトリのパスを取得
@@ -52,9 +52,17 @@ for filename in glob.glob(os.path.join(domain_dir, '*')):
         #                   glob.glob(os.path.join(filename, '*.xml'))))
         datafiles.append((os.path.join(site_dir, filename[len(domain_dir) - 6:]),
                           glob.glob(os.path.join(filename, '*.xml'))))
+agents_dir = os.path.join(here, 'agents')
+datafiles.append((os.path.join(site_dir, 'agents'),
+                  glob.glob(os.path.join(agents_dir, '*.py'))))
+# for filename in glob.glob(os.path.join(agents_dir, '*')):
+#     datafiles.append((os.path.join(site_dir, filename[len(domain_dir) - 6:]),
+#                       glob.glob(os.path.join(filename, '*.py'))))
 # datafiles = glob.glob(os.path.join(domain_dir, '**/*.xml'))
 # sourcefiles = ['jupiter/simulator/cython/make_bid.pyx']
 print(datafiles)
+# print("test:", glob.glob(os.path.join(agents_dir, '*.py')))
+# print("site:", os.path.join(site_dir, 'agents'))
 
 
 setup(
