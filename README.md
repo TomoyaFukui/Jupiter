@@ -29,6 +29,13 @@ $ pip install jupiter-negotiation
 ```
 Jupiter is only developed in Python3.
 
+## How to use
+Please see https://github.com/TomoyaFukui/Jupiter/blob/master/notebooks/quick_start.ipynb
+I will make GUI and CUI in the future.
+
 ## Changelog
+### Version 0.0.dev5(2018.01.15)
+- release jupiter-negotiation 0.0.dev5
+- change directory structure
 ### Version 0.0.dev4(2018.01.15)
 - release jupiter-negotiation 0.0.dev4
