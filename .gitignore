@@ -1,5 +1,4 @@
 *.pyc
-*.ipynb
 *.json
 src/__pycache__/
 src/agents/__pycache__/
