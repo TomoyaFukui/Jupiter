@@ -78,20 +78,28 @@ class Calculator:
     # 使わない
     def __calculate_nash_points(self):
         print("calculate_nash_points")
-        # value_max = 0
-        # for utility_list, parato_point in zip(self.parato_points_utility_value, self.parato_points):
-        #     value_temp = 1
-        #     for utility, reservation in zip(utility_list, self.__reservation_list):
-        #         value_temp *= (utility - reservation)
-        #     if value_max < value_temp:
-        #         value_max = value_temp
-        #         self.nash_points = [parato_point]
-        #         self.nash_points_utility_value = [utility_list]
-        #     elif value_max == value_temp:
-        #         self.nash_points.append(parato_point)
-        #         self.nash_points_utility_value.append(utility_list)
-        #print(self.nash_points_utility_value)
-        #for point, value in zip(self.parato_points, self.parato_points_utility_value):
+        print(self.parato_points)
+        print(self.parato_points_utility_value)
+        eps = 1e-10 # 浮動小数点同士の等値比較のため
+
+        value_max = 0
+        for utility_list, parato_point in zip(self.parato_points_utility_value, self.parato_points):
+            value_temp = 1
+            for utility, reservation in zip(utility_list, self.__reservation_list):
+                print("Util: " + str(utility) +" RV: " + str(reservation))
+                value_temp *= (utility - reservation)
+            if value_max < value_temp:
+                value_max = value_temp
+                self.nash_points = [parato_point]
+                self.nash_points_utility_value = [utility_list]
+            elif abs(value_max - value_temp) <= eps:
+                self.nash_points.append(parato_point)
+                self.nash_points_utility_value.append(utility_list)
+        print("Bids: " + str(self.nash_points))
+        print("Util: " + str(self.nash_points_utility_value))
+
+        # min_gap = 0
+        # for point, value in zip(self.parato_points, self.parato_points_utility_value):
         #    if min_gap > max(value) - min(value):
         #        min_gap = max(value) - min(value)
         #        self.nash_points = []
@@ -102,6 +110,7 @@ class Calculator:
         #        min_gap = max(value) - min(value)
         #        self.nash_points.append(point)
         #        self.nash_points_utility_value.append(value)
+        # print("#2: " + str(self.nash_points_utility_value))
 
     def get_agreement_points(self):
         '''

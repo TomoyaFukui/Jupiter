@@ -21,8 +21,8 @@ if __name__ == '__main__':
 
 
     jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 100, path + '/Atlas3/triangularFight.xml',
-         path +  '/Atlas3/triangularFight_util1.xml',
-         path +  '/Atlas3/triangularFight_util2.xml')
+         path +  '/Atlas3/triangularFight_util2.xml',
+         path +  '/Atlas3/triangularFight_util1.xml')
     jupiter.set_agent(linearAgent, 'LinearAgent')
     jupiter.set_agent(concederAgent, 'ConcederAgent')
 
