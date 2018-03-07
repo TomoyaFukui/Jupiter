@@ -13,13 +13,14 @@ from . import comunicateJavaAgent
 # from ..agents.linearAgent import LinearAgent
 # from ..agents.concederAgent import ConcederAgent
 # from ..agents.boulwareAgent import BoulwareAgent
-from .. import agents
+# from .. import agents
 import sys
 import os
 import site
 import importlib
-sys.path.append(os.path.join(site.getsitepackages()[-1], "jupiter-negotiation/agents"))
-ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/../"
+sys.path.append(os.path.join(site.getsitepackages()[-1],
+                             "jupiter-negotiation/agents"))
+# ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/../"
 
 
 class Jupiter:
@@ -526,11 +527,14 @@ def test(is_printed=True, is_notebook=False):
     # jupiter_dir = os.getcwd()
     # jupiter_dir[: jupiter_dir.find("simulator")]
     # jupiter_dir = jupiter_dir.replace("/", ".")
-    module = getattr(agents, 'linearAgent')
+    module = importlib.import_module('linearAgent')
+    # module = getattr(agents, 'linearAgent')
     jupiter.set_agent(module, 'LinearAgent')
-    module = getattr(agents, 'concederAgent')
+    module = importlib.import_module('concederAgent')
+    # module = getattr(agents, 'concederAgent')
     jupiter.set_agent(module, 'ConcederAgent')
     # jupiter.set_agent(agents, 'ConcederAgent')
+    jupiter.set_save_pictures_Flag()
     if is_notebook:
         jupiter.set_notebook_flag()
         jupiter.do_negotiation(is_printing=False, print_times=1)

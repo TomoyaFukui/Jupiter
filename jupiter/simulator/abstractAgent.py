@@ -10,13 +10,15 @@ from . import agentAction
 # 抽象クラス
 class AbstractAgent(metaclass=ABCMeta):
     """
-    自動交渉エージェントの抽象クラス
-    自動交渉エージェントを作成する際はこのクラスを継承すること
+    abstract class about a automated agent
+
+    if you make automated agent, please inherit this class.
     """
 
     @abstractmethod
     def __init__(self, utility_space: abstractUtilitySpace.AbstractUtilitySpace,
-                negotiation_rule: negotiationRule.NegotiationRule, agent_id:int, agent_num:int):
+                 negotiation_rule: negotiationRule.NegotiationRule,
+                 agent_id: int, agent_num: int):
         """
         :param AbstractUtilitySpace utility_space: 効用空間の情報が取得できる
         :param NegotiationRule negotiation_rule: 交渉の時間やタイプ，現在の正規化時間が取得できる
