@@ -77,18 +77,19 @@ class Calculator:
     # それぞれの(utility - reservation_value)の総積が最大となる点
     # 使わない
     def __calculate_nash_points(self):
-        value_max = 0
-        for utility_list, parato_point in zip(self.parato_points_utility_value, self.parato_points):
-            value_temp = 1
-            for utility, reservation in zip(utility_list, self.__reservation_list):
-                value_temp *= (utility - reservation)
-            if value_max < value_temp:
-                value_max = value_temp
-                self.nash_points = [parato_point]
-                self.nash_points_utility_value = [utility_list]
-            elif value_max == value_temp:
-                self.nash_points.append(parato_point)
-                self.nash_points_utility_value.append(utility_list)
+        print("calculate_nash_points")
+        # value_max = 0
+        # for utility_list, parato_point in zip(self.parato_points_utility_value, self.parato_points):
+        #     value_temp = 1
+        #     for utility, reservation in zip(utility_list, self.__reservation_list):
+        #         value_temp *= (utility - reservation)
+        #     if value_max < value_temp:
+        #         value_max = value_temp
+        #         self.nash_points = [parato_point]
+        #         self.nash_points_utility_value = [utility_list]
+        #     elif value_max == value_temp:
+        #         self.nash_points.append(parato_point)
+        #         self.nash_points_utility_value.append(utility_list)
         #print(self.nash_points_utility_value)
         #for point, value in zip(self.parato_points, self.parato_points_utility_value):
         #    if min_gap > max(value) - min(value):
