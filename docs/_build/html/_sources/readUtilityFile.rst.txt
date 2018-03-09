@@ -1,7 +1,0 @@
-readUtilityFile module
-======================
-
-.. automodule:: readUtilityFile
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,7 +1,0 @@
-comunicateJavaAgent module
-==========================
-
-.. automodule:: comunicateJavaAgent
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,7 +1,0 @@
-summrizationOfUtilitySpace module
-=================================
-
-.. automodule:: summrizationOfUtilitySpace
-    :members:
-    :undoc-members:
-    :show-inheritance:

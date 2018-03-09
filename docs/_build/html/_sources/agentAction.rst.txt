@@ -1,7 +1,0 @@
-agentAction module
-==================
-
-.. automodule:: agentAction
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,7 +1,0 @@
-abstractAgent module
-====================
-
-.. automodule:: abstractAgent
-    :members:
-    :undoc-members:
-    :show-inheritance:
