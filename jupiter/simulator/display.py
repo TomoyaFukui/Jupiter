@@ -42,8 +42,8 @@ class Display:
             del self.__fig
             del self.__ax
             del self.__line0
-            del self.__line1
-            del self.__line2
+            del self.__line_parato
+            del self.__line_nash
             del self.__line3
             del self.__line4
         elif self.__agent_num == 3:
@@ -66,9 +66,14 @@ class Display:
         self.__line0, = self.__ax.plot(x, y, 'ks', label='candidate')
 
         parato_points = self.__calculate.get_parato_points()[1]
-        x1 = [i[0] for i in parato_points]
-        y1 = [i[1] for i in parato_points]
-        self.__line1, = self.__ax.plot(x1, y1, 'rs', label='parato')
+        px = [i[0] for i in parato_points]
+        py = [i[1] for i in parato_points]
+        self.__line_parato, = self.__ax.plot(px, py, 'cs', label='parato')
+
+        nash_points = self.__calculate.get_nash_points()[1]
+        xn = [i[0] for i in nash_points]
+        yn = [i[1] for i in nash_points]
+        self.__line_nash, = self.__ax.plot(xn, yn, 'rs', label='nash')
 
         self.__line2, = self.__ax.plot([2], [2], 'b.', label=self.__agent_name_list[0])
         self.__line3, = self.__ax.plot([2], [2], 'g.', label=self.__agent_name_list[1])

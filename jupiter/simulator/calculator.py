@@ -73,9 +73,6 @@ class Calculator:
                 j += 1
             i += 1
 
-    # 計算の仕方おかしい
-    # それぞれの(utility - reservation_value)の総積が最大となる点
-    # 使わない
     def __calculate_nash_points(self):
         print("calculate_nash_points")
         print(self.parato_points)
@@ -95,8 +92,8 @@ class Calculator:
             elif abs(value_max - value_temp) <= eps:
                 self.nash_points.append(parato_point)
                 self.nash_points_utility_value.append(utility_list)
-        print("Bids: " + str(self.nash_points))
-        print("Util: " + str(self.nash_points_utility_value))
+        # print("Bids: " + str(self.nash_points))
+        # print("Util: " + str(self.nash_points_utility_value))
 
         # min_gap = 0
         # for point, value in zip(self.parato_points, self.parato_points_utility_value):
@@ -129,6 +126,15 @@ class Calculator:
         :return: パレート点のインデックスのリスト，全プレイヤーの効用値のリスト，のリスト
         '''
         return (self.parato_points, self.parato_points_utility_value)
+
+    def get_nash_points(self):
+        '''
+        ナッシュ交渉解を返す
+
+        :rtype: [[int], [float]]
+        :return: ナッシュ交渉解のインデックスのリスト，全プレイヤーの効用値のリスト，のリスト
+        '''
+        return (self.nash_points, self.nash_points_utility_value)
 
     def get_utilities(self, index_list_list: [[[int], float]]):
         value_list_list = []
