@@ -197,6 +197,12 @@ class Display:
             matplotrecorder.save_movie("movies/animation.gif", 0.1)
 
     def plot2_notebook(self, action_list, get_agreement):
+        '''
+        jupyter notebook上に二者間交渉の過程をplotする．あらかじめplot_initialize()を実行しておくこと．
+
+        :param List[AbstractAction] action_list: 描画を行いたいactionのリスト
+        :param List[bool, AbstractAction] get_agreement: 描画を行いたい合意結果
+        '''
         for i in range(self.__agent_num):
             bid_list = [[x.get_bid().get_indexes(), x.get_time_offered()] for x in action_list
                             if (isinstance(x, agentAction.Offer) or isinstance(x, agentAction.Accept))
@@ -208,10 +214,10 @@ class Display:
                 self.__line2.set_data(x, y)
             elif i == 1:
                 self.__line3.set_data(x, y)
-        if get_agreement[0] == True and isinstance(get_agreement[1], agentAction.EndNegotiation):
+        if get_agreement[0] is True and isinstance(get_agreement[1], agentAction.EndNegotiation):
             agreement = self.__calculate.get_discount_reservation_value_list(get_agreement[1].get_time_offered())
             self.__line4.set_data(agreement[0], agreement[1])
-        elif get_agreement[0] == True:
+        elif get_agreement[0] is True:
             agreement = get_agreement[1].get_bid().get_indexes()
             agreement = self.__calculate.get_utility(agreement, get_agreement[1].get_time_offered())
             self.__line4.set_data(agreement[0], agreement[1])
@@ -220,6 +226,12 @@ class Display:
         plt.show()
 
     def plot3_notebook(self, action_list, get_agreement):
+        '''
+        jupyter notebook上に三者間交渉の過程をplotする．あらかじめplot_initialize()を実行しておくこと．
+
+        :param List[AbstractAction] action_list: 描画を行いたいactionのリスト
+        :param List[bool, AbstractAction] get_agreement: 描画を行いたい合意結果
+        '''
         self.__ax_list[3].legend(loc='upper right')
         for i in range(self.__agent_num):
             bid_list = [[x.get_bid().get_indexes(), x.get_time_offered()] for x in action_list
@@ -232,13 +244,13 @@ class Display:
                 if j == 3:
                     continue
                 lines[i+2].set_data(util_list[j%3], util_list[(j+1)%3])
-        if get_agreement[0] == True and isinstance(get_agreement[1], agentAction.EndNegotiation):
+        if get_agreement[0] is True and isinstance(get_agreement[1], agentAction.EndNegotiation):
             agreement = self.__calculate.get_discount_reservation_value_list(get_agreement[1].get_time_offered())
             for i, lines in enumerate(self.__line_list):
                 if i == 3:
                     continue
                 lines[5].set_data(agreement[i%3], agreement[(i+1)%3])
-        elif get_agreement[0] == True:
+        elif get_agreement[0] is True:
             agreement = get_agreement[1].get_bid().get_indexes()
             agreement = self.__calculate.get_utility(agreement, get_agreement[1].get_time_offered())
             for i, lines in enumerate(self.__line_list):
@@ -298,6 +310,16 @@ class Display:
         :return: パレート距離
         '''
         return self.__calculate.get_parato_distance(action.get_bid().get_indexes(), action.get_time_offered())
+
+    def get_nash_distance(self, action):
+        '''
+        パレート距離を取得する．
+
+        :param AbstractAction action: エージェントの名前
+        :rtype: float
+        :return: ナッシュ交渉解との距離
+        '''
+        return self.__calculate.get_nash_distance(action.get_bid().get_indexes(), action.get_time_offered())
 
     def set_save_flag(self):
         '''

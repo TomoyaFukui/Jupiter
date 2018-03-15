@@ -74,16 +74,16 @@ class Calculator:
             i += 1
 
     def __calculate_nash_points(self):
-        print("calculate_nash_points")
-        print(self.parato_points)
-        print(self.parato_points_utility_value)
+        # print("calculate_nash_points")
+        # print(self.parato_points)
+        # print(self.parato_points_utility_value)
         eps = 1e-10 # 浮動小数点同士の等値比較のため
 
         value_max = 0
         for utility_list, parato_point in zip(self.parato_points_utility_value, self.parato_points):
             value_temp = 1
             for utility, reservation in zip(utility_list, self.__reservation_list):
-                print("Util: " + str(utility) +" RV: " + str(reservation))
+                # print("Util: " + str(utility) +" RV: " + str(reservation))
                 value_temp *= (utility - reservation)
             if value_max < value_temp:
                 value_max = value_temp
@@ -188,7 +188,7 @@ class Calculator:
     #     print("parato distance:", self.get_parato_distance(bid_.get_indexes()))
     #     print("nash distance:", self.get_nash_distance(bid_.get_indexes()))
 
-    def get_parato_distance(self, index_list: List[int], time:float) -> float:
+    def get_parato_distance(self, index_list: List[int], time: float) -> float:
         '''
         パレート距離を計算する
 
@@ -208,7 +208,7 @@ class Calculator:
                 point = self.parato_points_utility_value[i]
         return min_distance
 
-    def get_nash_distance(self, index_list: List[int]) -> float:
+    def get_nash_distance(self, index_list: List[int], time: float) -> float:
         '''
         ナッシュ距離を計算する
 
@@ -216,6 +216,16 @@ class Calculator:
         :rtype: float
         :return: ナッシュ距離
         '''
-        point_np = np.array(self.get_utility(index_list, is_discounted=False), dtype=np.float32)
+        # point_np = np.array(self.get_utility(index_list, is_discounted=False), dtype=np.float32)
+        # nash_points_np = np.array(self.nash_points_utility_value, dtype=np.float32)
+        # return np.linalg.norm(point_np - nash_points_np[0])
+        if isinstance(index_list[0], int):
+            point_np = np.array(self.get_utility(index_list, time), dtype=np.float32)
         nash_points_np = np.array(self.nash_points_utility_value, dtype=np.float32)
-        return np.linalg.norm(point_np - nash_points_np[0])
+        min_distance = 9999
+        point = []
+        for i in range(len(self.nash_points)):
+            if min_distance > np.linalg.norm(point_np - nash_points_np[i]):
+                min_distance = np.linalg.norm(point_np - nash_points_np[i])
+                point = self.nash_points_utility_value[i]
+        return min_distance

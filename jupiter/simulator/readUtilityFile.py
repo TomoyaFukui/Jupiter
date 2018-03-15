@@ -21,10 +21,10 @@ class ReadXML():
                 for node in list(nodes):
                     records_value_name[node.get("index")] = node.get(value_name)
                     records_value[node.get("index")] = node.get('value')
-                self.__all_records.append({"index":nodes.get("index"),
-                                            tag_name:records_value_name,
-                                            "name":nodes.get("name"),
-                                            nodes.get("name"):records_value})
+                self.__all_records.append({"index": nodes.get("index"),
+                                            tag_name: records_value_name,
+                                            "name": nodes.get("name"),
+                                            nodes.get("name"): records_value})
             else:
                 self.__set_dictionary(nodes, tag_name, value_name)
 

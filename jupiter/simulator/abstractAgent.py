@@ -11,8 +11,10 @@ from . import agentAction
 class AbstractAgent(metaclass=ABCMeta):
     """
     abstract class about a automated agent
+    自動交渉エージェントの抽象クラス
 
-    if you make automated agent, please inherit this class.
+    if you make automated agent, inherit this class.
+    自動交渉エージェントを作成するなら，このクラスを継承して作成してください．
     """
 
     @abstractmethod

@@ -18,9 +18,10 @@ import sys
 import os
 import site
 import importlib
-sys.path.append(os.path.join(site.getsitepackages()[-1],
-                             "jupiter-negotiation/agents"))
-# ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/../"
+# sys.path.append(os.path.join(site.getsitepackages()[-1],
+#                              "jupiter-negotiation/agents"))
+ABSPATH = os.path.dirname(os.path.abspath(__file__)) + "/../"
+sys.path.append(os.path.join(ABSPATH, "agents"))
 
 
 class Jupiter:
@@ -61,12 +62,30 @@ class Jupiter:
         self.__get_agreement_list = []
 
     def get_action_list_list(self):
+        '''
+        過去の交渉履歴を取得する．
+
+        :rtype: [[AbstractAction]]
+        :return: 繰り返し提案応答ゲームにおける，過去の交渉履歴
+        '''
         return self.__action_list_list
 
-    def get_get_agreement_list(self):
+    def get_agreement_list(self):
+        '''
+        過去の合意履歴を取得する．
+
+        :rtype: [[bool, AbstractAction]]
+        :return: 繰り返し提案応答ゲームにおける，過去の合意履歴
+        '''
         return self.__get_agreement_list
 
     def get_end_utility_list(self):
+        '''
+        過去の合意結果の効用値に関する情報のリストを取得する．
+
+        :rtype: [[bool, AbstractAction]]
+        :return: 過去の合意結果の効用値に関する情報を取得する．
+        '''
         end_utility_list = []
         for get_agreement_list in self.__get_agreement_list:
             end_utility = {}
@@ -121,28 +140,28 @@ class Jupiter:
                             len(self.__agent_list), len(self.__file_names)))
         self.display.set_agent_name(self.__agent_list[-1].get_name())
 
-    def set_agent_by_name(self, module_name, agent_name):
-        """
-        エージェントを登録する
-
-        :param module module: 自動交渉エージェントのモジュール
-        :param str class_name: 自動交渉エージェントのクラス名
-        """
-        # sys.path.append(module_path)
-        module = importlib.import_module(module_name)
-        instance = globals()[agent_name]
-        # print(module)
-        # print(class_name)
-        # instance = getattr(agents, "linearAgent")
-        # instance = getattr(instance, "LinearAgent")
-        # instance = getattr(agents, module_name)
-        # instance = getattr(module, class_name)
-        # instance = getattr(module, class_name)
-        self.__agent_list.append(instance(
-                            self.__utilities.get_utility_space(len(self.__agent_list)),
-                            self.__rule,
-                            len(self.__agent_list), len(self.__file_names)))
-        self.display.set_agent_name(self.__agent_list[-1].get_name())
+    # def set_agent_by_name(self, module_name, agent_name):
+    #     """
+    #     エージェントを登録する
+    #
+    #     :param module module: 自動交渉エージェントのモジュール
+    #     :param str class_name: 自動交渉エージェントのクラス名
+    #     """
+    #     # sys.path.append(module_path)
+    #     module = importlib.import_module(module_name)
+    #     instance = globals()[agent_name]
+    #     # print(module)
+    #     # print(class_name)
+    #     # instance = getattr(agents, "linearAgent")
+    #     # instance = getattr(instance, "LinearAgent")
+    #     # instance = getattr(agents, module_name)
+    #     # instance = getattr(module, class_name)
+    #     # instance = getattr(module, class_name)
+    #     self.__agent_list.append(instance(
+    #                         self.__utilities.get_utility_space(len(self.__agent_list)),
+    #                         self.__rule,
+    #                         len(self.__agent_list), len(self.__file_names)))
+    #     self.display.set_agent_name(self.__agent_list[-1].get_name())
 
     def set_name(self, agent_name):
         """
@@ -239,6 +258,7 @@ class Jupiter:
                         print("last turn:", self.__rule.get_time_now())
                         print("agreement bid:", action.get_bid().get_indexes())
                         print("parato distance:", self.display.get_parato_distance(action))
+                        print("nash distance:", self.display.get_nash_distance(action))
                         for j, agent in enumerate(self.__agent_list):
                             print(agent.get_name(), ":", self.__utilities.get_utility_space(j)
                                 .get_utility_discounted(action.get_bid(), action.get_time_offered()))
@@ -257,84 +277,84 @@ class Jupiter:
         print("fail to get agreement")
         return self.__end_negotiation(action_list, [False])
 
-    def do_negotiation_gui(self, is_printing: bool, print_times=10) -> bool:
-        """
-        提案応答ゲームを行う
-
-        :param bool is_printing: 描画するかどうかのフラグ
-        :param int print_times: 何巡毎に描画を行うか
-        :rtype: bool
-        :return: 正常に自動交渉が終了したかどうかのbool
-        """
-        if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
-            self.__rule._NegotiationRuleTurn__start_negotiation()
-        elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time:
-            self.__rule._NegotiationRuleTime__start_negotiation()
-        else:
-            print('unexpected invalid NegotiationRuleType')
-            return False
-
-        if is_printing:
-            self.display.plot_initialize()
-
-        print("-" * 30)
-        print("start negotiation:", len(self.__get_agreement_list)+1)
-        for agent in self.__agent_list:
-            agent.receive_start_negotiation()
-
-        action_list = []
-        self.__accept_num = 1
-        can_proceed = True
-        while can_proceed:
-            for i in range(len(self.__agent_list)):
-                #agentにアクションを起こさせて、時間内かつアクションが有効か検証する
-                action = self.__agent_list[i].send_action()
-                if self.__rule.get_time_now() > 1.0:
-                    return self.__end_negotiation(action_list, [False])
-                elif not self.__is_valid_action(action, len(action_list)):
-                    print('unexpected invalid action caused')
-                    for agent in self.__agent_list:
-                        agent.receive_end_negotiation()
-                    return False
-                elif isinstance(action, agentAction.Accept):
-                    action.set_bid(action_list[-1].get_bid())
-                action.set_time_offered(self.__rule.get_time_now())
-                action_list.append(action)
-                # if is_printing:
-                # if not isinstance(action, agentAction.EndNegotiation):
-                #     print(self.__rule.get_time_now() , self.__agent_list[action.get_agent_id()].get_name(),
-                #         action_list[-1].__class__.__name__, action_list[-1].get_bid().get_indexes())
-                #各agentにアクションを知らせる
-                for j in range(len(self.__agent_list)):
-                    if i == j:
-                        continue
-                    self.__agent_list[j].receive_action(action_list[-1])
-                #ネゴシエーションの終了判定
-                if self.__is_finished_negotiation(action):
-                    if is_printing:
-                        self.display.update_end(action_list, [True, action])
-                    # EndNegotiationもprato_distanceをだせるように
-                    if not isinstance(action, agentAction.EndNegotiation):
-                        print("last turn:", self.__rule.get_time_now())
-                        print("agreement bid:", action.get_bid().get_indexes())
-                        print("parato distance:",self.display.get_parato_distance(action))
-                        for j, agent in enumerate(self.__agent_list):
-                            print(agent.get_name(), ":", self.__utilities.get_utility_space(j)
-                                .get_utility_discounted(action.get_bid(), action.get_time_offered()))
-                    else:
-                        print("last turn:", self.__rule.get_time_now())
-                        print("agreement bid: EndNegotiation")
-                    # EndNegotiationもprato_distanceをだせるように
-                    return self.__end_negotiation(action_list, [True, action])
-                elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time and \
-                    not self.__rule._NegotiationRuleTime__proceed_negotiation():
-                    return self.__end_negotiation(action_list, [False])
-            if is_printing and len(action_list) % print_times == 0:
-                self.display.update(action_list)
-            if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
-                can_proceed = self.__rule._NegotiationRuleTurn__proceed_negotiation()
-        print("fail to get agreement")
-        return self.__end_negotiation(action_list, [False])
+    # def do_negotiation_gui(self, is_printing: bool, print_times=10) -> bool:
+    #     """
+    #     提案応答ゲームを行う
+    #
+    #     :param bool is_printing: 描画するかどうかのフラグ
+    #     :param int print_times: 何巡毎に描画を行うか
+    #     :rtype: bool
+    #     :return: 正常に自動交渉が終了したかどうかのbool
+    #     """
+    #     if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
+    #         self.__rule._NegotiationRuleTurn__start_negotiation()
+    #     elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time:
+    #         self.__rule._NegotiationRuleTime__start_negotiation()
+    #     else:
+    #         print('unexpected invalid NegotiationRuleType')
+    #         return False
+    #
+    #     if is_printing:
+    #         self.display.plot_initialize()
+    #
+    #     print("-" * 30)
+    #     print("start negotiation:", len(self.__get_agreement_list)+1)
+    #     for agent in self.__agent_list:
+    #         agent.receive_start_negotiation()
+    #
+    #     action_list = []
+    #     self.__accept_num = 1
+    #     can_proceed = True
+    #     while can_proceed:
+    #         for i in range(len(self.__agent_list)):
+    #             #agentにアクションを起こさせて、時間内かつアクションが有効か検証する
+    #             action = self.__agent_list[i].send_action()
+    #             if self.__rule.get_time_now() > 1.0:
+    #                 return self.__end_negotiation(action_list, [False])
+    #             elif not self.__is_valid_action(action, len(action_list)):
+    #                 print('unexpected invalid action caused')
+    #                 for agent in self.__agent_list:
+    #                     agent.receive_end_negotiation()
+    #                 return False
+    #             elif isinstance(action, agentAction.Accept):
+    #                 action.set_bid(action_list[-1].get_bid())
+    #             action.set_time_offered(self.__rule.get_time_now())
+    #             action_list.append(action)
+    #             # if is_printing:
+    #             # if not isinstance(action, agentAction.EndNegotiation):
+    #             #     print(self.__rule.get_time_now() , self.__agent_list[action.get_agent_id()].get_name(),
+    #             #         action_list[-1].__class__.__name__, action_list[-1].get_bid().get_indexes())
+    #             #各agentにアクションを知らせる
+    #             for j in range(len(self.__agent_list)):
+    #                 if i == j:
+    #                     continue
+    #                 self.__agent_list[j].receive_action(action_list[-1])
+    #             #ネゴシエーションの終了判定
+    #             if self.__is_finished_negotiation(action):
+    #                 if is_printing:
+    #                     self.display.update_end(action_list, [True, action])
+    #                 # Endegotiationもprato_distanceをだせるように
+    #                 if not isinstance(action, agentAction.EndNegotiation):
+    #                     print("last turn:", self.__rule.get_time_now())
+    #                     print("agreement bid:", action.get_bid().get_indexes())
+    #                     print("parato distance:",self.display.get_parato_distance(action))
+    #                     for j, agent in enumerate(self.__agent_list):
+    #                         print(agent.get_name(), ":", self.__utilities.get_utility_space(j)
+    #                             .get_utility_discounted(action.get_bid(), action.get_time_offered()))
+    #                 else:
+    #                     print("last turn:", self.__rule.get_time_now())
+    #                     print("agreement bid: EndNegotiation")
+    #                 # EndNegotiationもprato_distanceをだせるように
+    #                 return self.__end_negotiation(action_list, [True, action])
+    #             elif self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Time and \
+    #                 not self.__rule._NegotiationRuleTime__proceed_negotiation():
+    #                 return self.__end_negotiation(action_list, [False])
+    #         if is_printing and len(action_list) % print_times == 0:
+    #             self.display.update(action_list)
+    #         if self.__rule.get_type() == negotiationRule.TypeOfNegotiation.Turn:
+    #             can_proceed = self.__rule._NegotiationRuleTurn__proceed_negotiation()
+    #     print("fail to get agreement")
+    #     return self.__end_negotiation(action_list, [False])
 
     def __is_valid_action(self, action: agentAction.AbstractAction, action_len: int) -> bool:
         if isinstance(action, agentAction.Accept) and action_len == 0:
@@ -514,40 +534,35 @@ def display_log(file_name, number_of_repeating):
     jupiter.display.show()
 
 def test(is_printed=True, is_notebook=False):
-    site_dir = os.path.join(site.getsitepackages()[-1], "jupiter-negotiation")
-    # jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180, 'domain/Atlas3/triangularFight.xml',
-    #     'domain/Atlas3/triangularFight_util1.xml', 'domain/Atlas3/triangularFight_util2.xml')
+    """
+    Jupiterをテスト実行する
+
+    :param bool is_printed: 描画するかどうかのフラグ
+    :param bool is_notebook: notebook上での描画かどうか
+    """
+
+    here = os.path.dirname(os.path.abspath(__file__))
     jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180,
-                      site_dir + '/domain/Atlas3/triangularFight.xml',
-                      site_dir + '/domain/Atlas3/triangularFight_util1.xml',
-                      site_dir + '/domain/Atlas3/triangularFight_util2.xml')
-    # jupiter = Jupiter(negotiationRule.TypeOfNegotiation.Turn, 180,
-    #                   'domain/pie/pie_domain.xml',
-    #                   'domain/pie/pie_A.xml', 'domain/pie/pie_B.xml')
-    # jupiter_dir = os.getcwd()
-    # jupiter_dir[: jupiter_dir.find("simulator")]
-    # jupiter_dir = jupiter_dir.replace("/", ".")
+                      here + '/../domain/Atlas3/triangularFight.xml',
+                      here + '/../domain/Atlas3/triangularFight_util1.xml',
+                      here + '/../domain/Atlas3/triangularFight_util2.xml')
     module = importlib.import_module('linearAgent')
-    # module = getattr(agents, 'linearAgent')
     jupiter.set_agent(module, 'LinearAgent')
     module = importlib.import_module('concederAgent')
-    # module = getattr(agents, 'concederAgent')
     jupiter.set_agent(module, 'ConcederAgent')
     # jupiter.set_agent(agents, 'ConcederAgent')
-    jupiter.set_save_pictures_Flag()
+    # jupiter.set_save_pictures_Flag()
     if is_notebook:
         jupiter.set_notebook_flag()
         jupiter.do_negotiation(is_printing=False, print_times=1)
         jupiter.display.plot_initialize()
         jupiter.display.plot2_notebook(jupiter.get_action_list_list()[-1],
-                                       jupiter.get_get_agreement_list()[-1])
-        # jupiter.display.update_end(jupiter.get_action_list_list()[-1],
-        #                            jupiter.get_get_agreement_list()[-1])
+                                       jupiter.get_agreement_list()[-1])
         # jupiter.display.show()
     else:
         jupiter.do_negotiation(is_printing=True, print_times=1)
-        jupiter.display.show()
-    # if is_printed:
+    # jupiter.display.delete_plot()
+    jupiter.display.show()
     return 0
 
 if __name__ == '__main__':

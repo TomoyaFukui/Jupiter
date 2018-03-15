@@ -2,18 +2,18 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser(
     prog="jupiter",
-    description="This is a simulator for automatically negotiation.")
+    description="This is a simulator for automated negotiation.")
 
 # parser.add_argument(
 #     "message",
 #     action="store",
 #     help="The message string.")
 
-parser.add_argument(
-    "--stack-trace",
-    dest="stacktrace",
-    action="store_true",
-    help="Display the stack trace when error occured.")
+# parser.add_argument(
+#     "--stack-trace",
+#     dest="stacktrace",
+#     action="store_true",
+#     help="Display the stack trace when error occured.")
 
 parser.add_argument(
     "--test",
