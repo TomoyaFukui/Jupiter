@@ -14,7 +14,7 @@ The feature is the following:
 
 ## Important links
 - Homepage English: http://www.itolab.nitech.ac.jp/Jupiter-HP/en/index.html
-- Homepage Japanese: http://www.itolab.nitech.ac.jp/Jupiter-HP/ja/index.html
+- Homepage Japanese: http://www.itolab.nitech.ac.jp/Jupiter-HP/jp/index.html
 - User Guide: http://www.itolab.nitech.ac.jp/Jupiter-HP/jp/userguide1.0.2.pdf
 - Source code: https://github.com/TomoyaFukui/Jupiter
 - Python package: https://pypi.python.org/pypi/jupiter-negotiation
