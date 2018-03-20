@@ -13,11 +13,14 @@ The feature is the following:
 
 
 ## Important links
-- Homepage: under constructions
-- User Guide: https://github.com/TomoyaFukui/Jupiter/blob/master/userguide.pdf
+- Homepage English: http://www.itolab.nitech.ac.jp/Jupiter-HP/en/
+- Homepage Japanese: http://www.itolab.nitech.ac.jp/Jupiter-HP/ja/
+<!-- - User Guide: https://github.com/TomoyaFukui/Jupiter/blob/master/userguide.pdf -->
+- User Guide: http://www.itolab.nitech.ac.jp/Jupiter-HP/jp/userguide1.0.2.pdf
 - Source code: https://github.com/TomoyaFukui/Jupiter
 - Python package: https://pypi.python.org/pypi/jupiter-negotiation
 - HTML documentation: https://github.com/TomoyaFukui/Jupiter/blob/master/docs/_build/html/index.html
+- ICAN2018: http://www.itolab.nitech.ac.jp/ICAN/competitions/ICAN2018.html
 - Paper: under writing
 - Related research: http://ii.tudelft.nl/genius/
 
@@ -34,6 +37,9 @@ Please see https://github.com/TomoyaFukui/Jupiter/blob/master/notebooks/quick_st
 I will make GUI and CUI in the future.
 
 ## Changelog
+### Version 1.0.2(2018.03.16)
+- release jupiter-negotiation 1.0.2
+- update userguide to version 1.0.2
 ### Version 0.0.dev5(2018.02.07)
 - release jupiter-negotiation 0.0.dev5
 - change directory structure
