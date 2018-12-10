@@ -186,34 +186,43 @@ class UtilitySpace(abstractUtilitySpace.AbstractUtilitySpace):
         bid_index_list = make_bid.get_bid_above_concession_value(self.__evaluations_np_list, random_number_list, concession_value)
         return bid.Bid(bid_index_list)
 
-    def get_bid_between_concession_values(self, max_concession_value, min_concession_value):
+    def get_bid_between_concession_values(self, max_concession_value, min_concession_value, make_num=10000):
         """
             Return bid between max and min concession values.
         """
         random_number_list = []
         for size in self.__issue_size_list:
-            random_number_list.append(rand.randint(0, size).tolist())
+            random_number_list.append(rand.randint(0, size, make_num).tolist())
+        bid_index_list = self.get_bid_index_list(self.__evaluations_np_list, random_number_list, max_concession_value, min_concession_value)
+        return bid.Bid(bid_index_list)
 
+
+    def get_bid_index_list(self, weight_list_list, random_number_list, max_concession_value, min_concession_value):
         ## Do something.
         random_number_size = len(random_number_list[0])
-        issue_size = len(self.__evaluations_np_list)
+        issue_size = len(weight_list_list)
 
         bid_index_list = [None] * issue_size
         bid_value_list = [0] * issue_size
 
         for j in range(0, issue_size):
-        bid_index_list[j] = random_number_list[j][0]
-        bid_value_list[j] = weight_list_list[j][random_number_list[j][0]]
+            bid_index_list[j] = random_number_list[j][0]
+            bid_value_list[j] = weight_list_list[j][random_number_list[j][0]]
 
         for i in range(1, random_number_size):
-            if sum(bid_value_list) + 0.001 >= min_concession_value and sum(bid_value_list) + 0.001 <= max_concession_value:
+            if (sum(bid_value_list) + 0.001) >= min_concession_value and (sum(bid_value_list) + 0.001) <= max_concession_value:
                 break
             for j in range(0, issue_size):
-                if bid_value_list[j] < weight_list_list[j][random_number_list[j][i]]:
+                if bid_value_list[j] < weight_list_list[j][random_number_list[j][i]] and (sum(bid_value_list) + 0.001) < min_concession_value:
                     bid_value_list[j] = weight_list_list[j][random_number_list[j][i]]
                     bid_index_list[j] = random_number_list[j][i]
-                if sum(bid_value_list) + 0.001 >= min_concession_value and sum(bid_value_list) + 0.001 <= max_concession_value:
+                elif bid_value_list[j] > weight_list_list[j][random_number_list[j][i]] and (sum(bid_value_list) + 0.001) > max_concession_value:
+                    bid_value_list[j] = weight_list_list[j][random_number_list[j][i]]
+                    bid_index_list[j] = random_number_list[j][i]  
+                if (sum(bid_value_list) + 0.001) >= min_concession_value and (sum(bid_value_list) + 0.001) <= max_concession_value:
                     break
+
+        return bid_index_list
 
     def get_utility_discounted(self, bid_: bid.Bid, time: float) -> float:
         """

@@ -13,6 +13,8 @@ class SampleAgent(abstractAgent.AbstractAgent):
         self.__rule = negotiation_rule
         self.__agent_id = agent_id
         self.__opponent_bid = None
+        self.__max_concession_value = 0.8
+        self.__min_concession_value = 0.7
 
     def receive_action(self, agentAction_: agentAction.AbstractAction):
         if isinstance(agentAction_, agentAction.Offer):
@@ -27,8 +29,8 @@ class SampleAgent(abstractAgent.AbstractAgent):
            self.__utility_space.get_utility(self.__opponent_bid):
             return agentAction.Accept(self.__agent_id)
 
-        bid_offer = self.__utility_space.get_bid_above_concession_value(
-            get_conssetion_value())
+        bid_offer = self.__utility_space.get_bid_between_concession_values(self.__max_concession_value, self.__min_concession_value)
+        print("Utility of the bid: ", self.__utility_space.get_utility(bid_offer))
         return agentAction.Offer(self.__agent_id, bid_offer)
 
     def receive_start_negotiation(self):

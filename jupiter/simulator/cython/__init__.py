@@ -1,1 +1,1 @@
-from . import make_bid
+import make_bid
