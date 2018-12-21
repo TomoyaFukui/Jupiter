@@ -25,6 +25,32 @@ def get_bid_above_concession_value(list weight_list_list, list random_number_lis
 
     return bid_index_list
 
+def get_bid_between_concession_values(list weight_list_list, list random_number_list, double max_concession_value, double min_concession_value):
+      cdef size_t random_number_size = len(random_number_list[0])
+      cdef size_t issue_size = len(weight_list_list)
+
+      bid_index_list = [None] * issue_size
+      bid_value_list = [0] * issue_size
+
+      for j in range(0, issue_size):
+          bid_index_list[j] = random_number_list[j][0]
+          bid_value_list[j] = weight_list_list[j][random_number_list[j][0]]
+
+      for i in range(1, random_number_size):
+          if (sum(bid_value_list) + 0.001) >= min_concession_value and (sum(bid_value_list) + 0.001) <= max_concession_value:
+              break
+          for j in range(0, issue_size):
+              if bid_value_list[j] < weight_list_list[j][random_number_list[j][i]] and (sum(bid_value_list) + 0.001) < min_concession_value:
+                  bid_value_list[j] = weight_list_list[j][random_number_list[j][i]]
+                  bid_index_list[j] = random_number_list[j][i]
+              if bid_value_list[j] > weight_list_list[j][random_number_list[j][i]] and (sum(bid_value_list) + 0.001) > max_concession_value:
+                  bid_value_list[j] = weight_list_list[j][random_number_list[j][i]]
+                  bid_index_list[j] = random_number_list[j][i]
+              if (sum(bid_value_list) + 0.001) >= min_concession_value and (sum(bid_value_list) + 0.001) <= max_concession_value:
+                  break
+
+      return bid_index_list
+
 # def get_bid_above_concession_value(list weight_list_list, list random_number_list, float concession_value):
 #     # cdef int res = 0
 #     cdef size_t random_number_size = len(random_number_list[0])

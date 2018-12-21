@@ -34,4 +34,4 @@ class ConcederAgent(abstractAgent.AbstractAgent):
         pass
 
     def get_name(self):
-        return 'ConsederAgent'
+        return 'ConcederAgent'
