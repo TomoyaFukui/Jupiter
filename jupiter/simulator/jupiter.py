@@ -84,7 +84,7 @@ class Jupiter:
                         end_utility[agent.get_name()] = self.__utilities.get_utility_space(j).get_utility(action.get_bid())
 
                     else:
-                        end_utility[agent.get_name()] = self.__utilities.get_utility_space(j).get_discount_reservation_value(action.get_time_offered())
+                        end_utility[agent.get_name()] = self.__utilities.get_utility_space(j).get_reservation_value(action.get_time_offered())
 
                 if not isinstance(action, agentAction.EndNegotiation):
                     end_utility["agreement_bid"] = action.get_bid().get_indexes()
@@ -92,11 +92,11 @@ class Jupiter:
                     end_utility["time"] = action.get_time_offered()
                 else:
                     end_utility["agreement_bid"] = 0
-                    end_utility["parato_distance"] = self.display.get_parato_distance(self.__utilities.get_discount_reservation_value_list(action.get_time_offered()))
+                    end_utility["parato_distance"] = self.display.get_parato_distance(self.__utilities.get_reservation_value(action.get_time_offered()))
                     end_utility["time"] = action.get_time_offered()
             else:
                 for j, agent in enumerate(self.__agent_list):
-                    end_utility[agent.get_name()] = self.__utilities.get_utility_space(j).get_discount_reservation_value(action.get_time_offered())
+                    end_utility[agent.get_name()] = self.__utilities.get_utility_space(j).get_reservation_value(action.get_time_offered())
                 end_utility["agreement_bid"] = 0
                 end_utility["parato_distance"] = 0
                 end_utility["time"] = 1

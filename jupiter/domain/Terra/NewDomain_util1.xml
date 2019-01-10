@@ -107,7 +107,7 @@
 <discount_factor value="0.3">
 </discount_factor>
 
-<reservation value="0.4">
+<reservation value="0.2">
 </reservation>
 
 </utility_space>
