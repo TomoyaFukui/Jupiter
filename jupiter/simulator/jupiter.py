@@ -96,7 +96,7 @@ class Jupiter:
                     end_utility["time"] = action.get_time_offered()
             else:
                 for j, agent in enumerate(self.__agent_list):
-                    end_utility[agent.get_name()] = 0
+                    end_utility[agent.get_name()] = self.__utilities.get_utility_space(j).get_discount_reservation_value(action.get_time_offered())
                 end_utility["agreement_bid"] = 0
                 end_utility["parato_distance"] = 0
                 end_utility["time"] = 1
@@ -241,7 +241,10 @@ class Jupiter:
 
     def __end_negotiation(self, actions, agreement) -> bool:
         for agent in self.__agent_list:
-            agent.receive_end_negotiation()
+            if agreement[0] = False:
+                agent.receive_end_negotiation("time")
+            else:
+                agent.receive_end_negotiation("")
         self.__action_list_list.append(actions)
         self.__get_agreement_list.append(agreement)
         return True

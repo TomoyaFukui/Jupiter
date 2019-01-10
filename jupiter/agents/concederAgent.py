@@ -30,7 +30,7 @@ class ConcederAgent(abstractAgent.AbstractAgent):
     def receive_start_negotiation(self):
         self.__opponent_bid = None
 
-    def receive_end_negotiation(self):
+    def receive_end_negotiation(self, message):
         pass
 
     def get_name(self):
