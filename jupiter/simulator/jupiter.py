@@ -241,7 +241,7 @@ class Jupiter:
 
     def __end_negotiation(self, actions, agreement) -> bool:
         for agent in self.__agent_list:
-            if agreement[0] = False:
+            if agreement[0] == False:
                 agent.receive_end_negotiation("time")
             else:
                 agent.receive_end_negotiation("")
